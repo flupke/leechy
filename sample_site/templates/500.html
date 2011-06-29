@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block content %}
+<h1>{% trans "Error" %}</h1>
+<p>
+    {% blocktrans %}
+    The site encountered an error, admins are working on it.
+    {% endblocktrans %}
+</p>
+{% endblock %}
