@@ -2,11 +2,9 @@
 
 import os
 import os.path as op
+import datetime
 from django.views.generic.base import View, TemplateResponseMixin
-from django.contrib import messages
-from django.utils.translation import ugettext as _
 from django import http
-from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404
 from leechy.models import Leecher
 from leechy import settings
@@ -27,6 +25,7 @@ class BrowserView(TemplateResponseMixin, View):
     def get(self, request, key, path):
         # Get Leecher from its key and update its last_visit timestamp
         leecher = get_object_or_404(Leecher, key=key)
+        leecher.last_visit = datetime.datetime.now()
         leecher.save() 
         # Create symlinks directory
         symlink_dir = op.join(settings.FILES_ROOT, key, path)
