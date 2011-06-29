@@ -48,6 +48,10 @@ The following optional settings can also be defined for more customization:
 ``LEECHY_INVITATION_EMAIL_FROM``
     The "from" address of invitation emails.
 
+``LEECHY_EXCLUDE_FILES``
+    File and directory names matching this regular expression are not shared.
+    The default is to exclude names starting with a period.
+
 Limitations
 -----------
 

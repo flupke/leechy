@@ -1,4 +1,5 @@
 import os.path as op
+import re
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 from django.core.exceptions import ImproperlyConfigured
@@ -30,3 +31,6 @@ INVITATION_SUBJECT = getattr(settings, "LEECHY_INVITATION_SUBJECT",
 
 INVITATION_EMAIL_FROM = getattr(settings, "LEECHY_INVITATION_EMAIL_FROM", 
     "leechy@host.com")
+
+EXCLUDE_FILES = re.compile(
+        getattr(settings, "LEECHY_EXCLUDE_FILES", "^\..*"))

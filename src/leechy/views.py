@@ -39,6 +39,8 @@ class BrowserView(TemplateResponseMixin, View):
         directories = []
         files = []
         for entry_name in os.listdir(source_dir):
+            if settings.EXCLUDE_FILES.match(entry_name):
+                continue
             entry_path = op.join(source_dir, entry_name)
             if op.isdir(entry_path):
                 url = op.join(path, entry_name)
