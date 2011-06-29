@@ -30,7 +30,7 @@ send_invitations.short_description = _("Send invitations by email")
 class LeecherAdmin(admin.ModelAdmin):
 
     list_display = ("email", "name", "enabled", "invitation_sent",
-            "date_created", "last_visit", "key")
+            "date_created", "last_visit", "share_link")
     list_filter = ("enabled", "invitation_sent")
     actions = [send_invitations]
 

@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.urlresolvers import reverse
 import uuid
 
 
@@ -10,12 +11,19 @@ class Leecher(models.Model):
     enabled = models.BooleanField(default=True)
     invitation_sent = models.BooleanField(editable=False)
     date_created = models.DateTimeField(auto_now_add=True)
-    last_visit = models.DateTimeField(auto_now=True)
+    last_visit = models.DateTimeField()
 
     def __unicode__(self):
         if self.name:
             return u"%s <%s>" % (self.name, self.email)
         return self.email
+
+    def share_link(self):
+        return '<a href="%(url)s">%(url)s</a>' % {
+            "url": reverse("leechy_browse", 
+                kwargs={"key": self.key, "path": ""})
+        }
+    share_link.allow_tags = True
 
     @classmethod
     def gen_key(cls, sender, instance, **_):
