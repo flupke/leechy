@@ -3,18 +3,20 @@
 {% block content %}
 <h1>Index of /{{ path }}</h1>
 
-<ul class="directories">
-    {% if path %}
-    <li><a href="../">Parent directory</a></li>
-    {% endif %}
-    {% for dir in directories %}
-    <li><a href="{% url leechy_browse key=key path=dir %}">{{ dir }}</a></li>
-    {% endfor %}
-</ul>
+<div class="browser">
+    <ul class="directories">
+        {% if path %}
+        <li><a href="../">Parent directory</a></li>
+        {% endif %}
+        {% for dir in directories %}
+        <li><a href="{% url leechy_browse key=key path=dir %}">{{ dir }}</a></li>
+        {% endfor %}
+    </ul>
 
-<ul class="files">
-    {% for url, name in files %}
-    <li><a href="{{ url }}">{{ name }}</a></li>
-    {% endfor %}
-</ul>
+    <ul class="files">
+        {% for url, name in files %}
+        <li><a href="{{ url }}">{{ name }}</a></li>
+        {% endfor %}
+    </ul>
+</div>
 {% endblock %}
