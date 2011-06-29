@@ -8,11 +8,20 @@ It works by creating an unique URL for each user, which can be used to access
 your files.
 
 Installation
-============
+------------
 
 Use the ``setup.py`` script to install leechy::
 
     python setup.py install
+
+You can try leechy with the sample Django project found in ``sample_site``::
+
+    cd sample_site/
+    python manage.py syncdb
+    python manage.py runserver    
+
+Configuration
+-------------
 
 You must define three settings for leechy:
 
@@ -28,13 +37,18 @@ You must define three settings for leechy:
 ``LEECHY_FILES_URL``
     The URL from which the files in ``LEECHY_FILES_ROOT`` can be fetched.
 
-You can try leechy with the Django project found in ``sample_site``::
+The following optional settings can also be defined for more customization:
 
-    cd sample_site/
-    python manage.py syncdb
-    python manage.py runserver
+``LEECHY_INNKEEPER_NAME``
+    The name used in emails sent by Lychee.
+
+``LEECHY_INVITATION_SUBJECT``
+    The subject of invitation emails.
+
+``LEECHY_INVITATION_EMAIL_FROM``
+    The "from" address of invitation emails.
 
 Limitations
-===========
+-----------
 
 Leechy needs symlinks and thus will only work on Unix systems.

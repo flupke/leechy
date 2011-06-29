@@ -1,0 +1,9 @@
+{% load i18n %}{% if leecher.name %}{% blocktrans with leecher_name=leecher.name%}Hi {{ leecher_name }},{% endblocktrans %}{% else %}{% blocktrans %}Hi,{% endblocktrans %}{% endif %}{% blocktrans %}
+
+{{ innkeeper_name }} invited you to browse its files. They are visible at the 
+following address:
+
+{{ leecher_uri }}
+
+Enjoy !
+{% endblocktrans %}
