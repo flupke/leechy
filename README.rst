@@ -2,9 +2,9 @@ Leechy - simple one-way file sharing
 ====================================
 
 Leechy allows you to easilly share files hosted on your server with your
-friends, while keeping them private.
+friends (and only your friends).
 
-It works by creating an unique URL for each user, which can be used to access
+It works by creating an unique URL for each user, which he can use to access
 your files.
 
 Installation

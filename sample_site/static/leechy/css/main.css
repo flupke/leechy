@@ -1,0 +1,15 @@
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+ul.directories li:before {
+    margin-right: 5px;
+    vertical-align: middle;
+    content: url(../images/folder.png);
+}
+
+ul.files li {
+    padding-left: 21px;
+}
