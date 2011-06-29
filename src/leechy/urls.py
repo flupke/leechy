@@ -4,6 +4,6 @@ from leechy.views import BrowserView, HomeView
 
 urlpatterns = patterns('',
     url(r'^$', HomeView.as_view(), name="leechy_home"),
-    url(r'^browse/(?P<key>[a-z0-9-]+)/(?P<path>.*)$', BrowserView.as_view(),
+    url(r'^browse/(?P<key>[a-f0-9]{32})/(?P<path>.*)$', BrowserView.as_view(),
         name="leechy_browse"),
 )

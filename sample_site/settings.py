@@ -1,4 +1,7 @@
 # Django settings for sample_site project.
+import os.path as op
+
+ROOT = op.join(op.dirname(__file__), "..")
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -11,8 +14,8 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': '',                      # Or path to database file if using sqlite3.
+        'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': op.join(ROOT, "var", "db", "leechy_sample_site.sqlite"), # Or path to database file if using sqlite3.
         'USER': '',                      # Not used with sqlite3.
         'PASSWORD': '',                  # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
@@ -68,11 +71,7 @@ STATIC_URL = '/static/'
 ADMIN_MEDIA_PREFIX = '/static/admin/'
 
 # Additional locations of static files
-STATICFILES_DIRS = (
-    # Put strings here, like "/home/html/static" or "C:/www/django/static".
-    # Always use forward slashes, even on Windows.
-    # Don't forget to use absolute paths, not relative paths.
-)
+STATICFILES_DIRS = []
 
 # List of finder classes that know how to find static files in
 # various locations.
@@ -142,3 +141,10 @@ LOGGING = {
         },
     }
 }
+
+# Leechy setup
+if DEBUG:
+    LEECHY_FILES_SOURCE = op.join(ROOT, "var", "leechy_source")
+    LEECHY_FILES_ROOT = op.join(ROOT, "var", "leechy_root")
+    LEECHY_FILES_URL = STATIC_URL
+    STATICFILES_DIRS.append(LEECHY_FILES_ROOT)
