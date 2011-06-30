@@ -11,7 +11,7 @@ class Leecher(models.Model):
     enabled = models.BooleanField(default=True)
     invitation_sent = models.BooleanField(editable=False)
     date_created = models.DateTimeField(auto_now_add=True)
-    last_visit = models.DateTimeField()
+    last_visit = models.DateTimeField(editable=False)
 
     def __unicode__(self):
         if self.name:

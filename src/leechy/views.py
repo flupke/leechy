@@ -25,6 +25,8 @@ class BrowserView(TemplateResponseMixin, View):
     def get(self, request, key, path):
         # Get Leecher from its key and update its last_visit timestamp
         leecher = get_object_or_404(Leecher, key=key)
+        if not leecher.enabled:
+            raise http.Http404()
         leecher.last_visit = datetime.datetime.now()
         leecher.save() 
         # Create symlinks directory
