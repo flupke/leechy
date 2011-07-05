@@ -20,14 +20,14 @@ You can try leechy with the sample Django project found in ``sample_site``::
     python manage.py syncdb
     python manage.py runserver    
 
-If you want to run the site on your server, you can use the following scripts
-to set it up for gunicorn::
+If you want to run the site on your server, you can use the accompanying
+install scripts::
 
     ./install.sh 
     ./run-gunicorn.sh
 
-This will create a virtualenv for the site and run it with the gevent worker.
-You then have to point your frontend server configuration to the site's socket
+This will create a virtualenv for the site and run it with gunicorn.  You then
+have to point your frontend server configuration to the site's socket
 (``/tmp/leechy.sock`` by default). For example with nginx::
 
     worker_processes  1;
