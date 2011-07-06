@@ -271,6 +271,18 @@ ul {
     padding: 0;
 }
 
+ul li:hover {
+    background-color: #f8f8f8;
+}
+
+ul input {
+    margin: 0;
+}
+
+ul.directories input {
+    margin-left: -3px;
+}
+
 ul.directories li:before {
     margin-right: 5px;
     vertical-align: middle;
