@@ -17,10 +17,11 @@
     </ul>
 
     <ul class="files">
-        {% for furl, fpath, fname in files %}
+        {% for furl, fpath, fname, fsize in files %}
         <li>
             <input type="checkbox" path="{{ fpath }}"{% if fpath in checked_paths %} checked{% endif %} />
             <a href="{{ furl }}">{{ fname }}</a>
+            <div class="right">{{ fsize|filesizeformat }}</div>
         </li>
         {% endfor %}
     </ul>

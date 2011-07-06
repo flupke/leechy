@@ -59,7 +59,8 @@ class BrowserView(TemplateResponseMixin, LeecherViewMixin, View):
                 files.append((
                     op.join(settings.FILES_URL, key, path, entry_name),
                     op.join(path, entry_name),
-                    entry_name
+                    entry_name,
+                    op.getsize(entry_path),
                 ))
                 symlink_path = op.join(symlink_dir, entry_name)
                 if not op.isfile(symlink_path):
