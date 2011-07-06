@@ -18,6 +18,7 @@ You can try leechy with the sample Django project found in ``sample_site``::
 
     cd sample_site/
     python manage.py syncdb
+    python manage.py migrate
     python manage.py runserver    
 
 If you want to run the site on your server, you can use the accompanying
