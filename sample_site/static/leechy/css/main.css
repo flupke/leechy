@@ -299,3 +299,7 @@ ul.files li {
     border-radius: 6px;
     border: 1px #aaa solid;
 }
+
+li.checked a {
+    color: #69c;
+}
