@@ -32,7 +32,7 @@ class Leecher(models.Model):
     @classmethod
     def gen_key(cls, sender, instance, **_):
         if not instance.key:
-            instance.key = str(uuid.uuid1()).replace("-", "")
+            instance.key = str(uuid.uuid4()).replace("-", "")
 
 
 models.signals.pre_save.connect(Leecher.gen_key, sender=Leecher)
