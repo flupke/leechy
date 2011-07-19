@@ -9,7 +9,7 @@
         <li><a href="../">Parent directory</a></li>
         {% endif %}
         {% for dir in directories %}
-        <li>
+        <li{% if dir in checked_paths %} class="checked"{% endif %}>
             <input type="checkbox" path="{{ dir }}"{% if dir in checked_paths %} checked{% endif %} />
             <a href="{% url leechy_browse key=key path=dir %}">{{ dir }}</a>
         </li>
@@ -18,7 +18,7 @@
 
     <ul class="files">
         {% for furl, fpath, fname, fsize in files %}
-        <li>
+        <li{% if fpath in checked_paths %} class="checked"{% endif %}>
             <input type="checkbox" path="{{ fpath }}"{% if fpath in checked_paths %} checked{% endif %} />
             <a href="{{ furl }}">{{ fname }}</a>
             <div class="right">{{ fsize|filesizeformat }}</div>
@@ -33,11 +33,13 @@
     {
         $("input[type=checkbox]").change(function()
         {
+            var $this = $(this);
             $.get("{% url leechy_update_file_metadata key=key %}", {
-                path: $(this).attr("path"), 
+                path: $this.attr("path"), 
                 attr: "checked",
-                value: $(this).prop("checked")
+                value: $this.prop("checked")
             });
+            $this.parent().toggleClass("checked");
         });
     });
 </script>
