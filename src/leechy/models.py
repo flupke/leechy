@@ -7,6 +7,7 @@ from leechy.fields import JSONField
 class Leecher(models.Model):
 
     bool_metadata_attrs = ["checked"]
+    bool_settings_attrs = ["hide_checked"]
 
     key = models.CharField(max_length=32, primary_key=True, editable=False)
     email = models.EmailField()
@@ -16,6 +17,7 @@ class Leecher(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     last_visit = models.DateTimeField(editable=False, null=True)
     files_metadata = JSONField(editable=False, null=True)
+    settings = JSONField(editable=False, null=True)
 
     def __unicode__(self):
         if self.name:

@@ -1,5 +1,6 @@
-from django.conf.urls.defaults import patterns, include, url
-from leechy.views import BrowserView, HomeView, UpdateFilesMetadataView
+from django.conf.urls.defaults import patterns, url
+from leechy.views import (BrowserView, HomeView, UpdateFilesMetadataView,
+        UpdateSettingsView)
 
 
 urlpatterns = patterns('',
@@ -8,4 +9,6 @@ urlpatterns = patterns('',
         name="leechy_browse"),
     url(r'^update_file_metadata/(?P<key>[a-f0-9]{32})/$', 
         UpdateFilesMetadataView.as_view(), name="leechy_update_file_metadata"),
+    url(r'^update_settings/(?P<key>[a-f0-9]{32})/$', 
+        UpdateSettingsView.as_view(), name="leechy_update_settings"),
 )

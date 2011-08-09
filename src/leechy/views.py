@@ -72,6 +72,7 @@ class BrowserView(TemplateResponseMixin, LeecherViewMixin, View):
             "directories": directories,
             "files": files,
             "checked_paths": checked_paths,
+            "settings": leecher.settings,
         })
 
 
@@ -91,3 +92,18 @@ class UpdateFilesMetadataView(LeecherViewMixin, View):
         leecher.files_metadata[path][attr] = value
         leecher.save()
         return http.HttpResponse()
+
+
+class UpdateSettingsView(LeecherViewMixin, View):        
+
+    def get(self, request, key):
+        leecher = self.get_leecher(key)
+        attr = request.GET["attr"]
+        value = request.GET["value"]
+        if attr in Leecher.bool_settings_attrs:
+            value = True if value == "true" else False
+        if leecher.settings is None:
+            leecher.settings = {}
+        leecher.settings[attr] = value
+        leecher.save()
+        return http.HttpResponse()    
