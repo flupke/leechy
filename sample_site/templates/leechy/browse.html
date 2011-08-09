@@ -15,10 +15,10 @@
         {% if path %}
         <li><a href="../">Parent directory</a></li>
         {% endif %}
-        {% for dir in directories %}
-        <li{% if dir in checked_paths %} class="checked"{% endif %}>
-            <input class="entry_checkbox" type="checkbox" path="{{ dir }}"{% if dir in checked_paths %} checked{% endif %} />
-            <a href="./{{ dir }}/">{{ dir }}</a>
+        {% for rel_path, full_path in directories %}
+        <li{% if full_path in checked_paths %} class="checked"{% endif %}>
+            <input class="entry_checkbox" type="checkbox" path="{{ full_path }}"{% if full_path in checked_paths %} checked{% endif %} />
+            <a href="{{ rel_path }}">{{ rel_path|slice:"-1" }}</a>
         </li>
         {% endfor %}
     </ul>

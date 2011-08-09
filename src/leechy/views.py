@@ -51,7 +51,9 @@ class BrowserView(TemplateResponseMixin, LeecherViewMixin, View):
                 continue
             entry_path = op.join(source_dir, entry_name)
             if op.isdir(entry_path):
-                directories.append(entry_name)
+                rel_path = entry_name + "/"
+                full_path = op.join(path, rel_path)
+                directories.append((rel_path, full_path))
             else:
                 files.append((
                     op.join(settings.FILES_URL, key, path, entry_name),
