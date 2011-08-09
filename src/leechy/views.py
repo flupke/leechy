@@ -91,8 +91,8 @@ class BrowserView(TemplateResponseMixin, LeecherViewMixin, View):
         """
         Given *name*, build a Google search URL.
         """
-        words = self.google_split_pattern.split(name)
-        return "http://www.google.com/?%s" % urllib.urlencode(
+        words = self.google_split_pattern.split(name.encode("utf8"))
+        return "http://www.google.com/search?%s" % urllib.urlencode(
                 {"q": " ".join(words)})
 
 
