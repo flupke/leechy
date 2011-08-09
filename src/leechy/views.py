@@ -35,10 +35,10 @@ class BrowserView(TemplateResponseMixin, LeecherViewMixin, View):
 
     def get(self, request, key, path):
         leecher = self.get_leecher(key)
-        # Create symlinks directory
-        symlink_dir = op.join(settings.FILES_ROOT, key, path)
+        # Create root symlink
+        symlink_dir = op.join(settings.FILES_ROOT, key)
         if not op.isdir(symlink_dir):
-            os.makedirs(symlink_dir)
+            os.symlink(settings.FILES_SOURCE, symlink_dir)
         # Get files and directories
         source_dir = op.join(settings.FILES_SOURCE, path)
         if not op.isdir(source_dir):
@@ -51,10 +51,7 @@ class BrowserView(TemplateResponseMixin, LeecherViewMixin, View):
                 continue
             entry_path = op.join(source_dir, entry_name)
             if op.isdir(entry_path):
-                url = op.join(path, entry_name)
-                if not url.endswith("/"):
-                    url += "/"
-                directories.append(url)
+                directories.append(entry_name)
             else:
                 files.append((
                     op.join(settings.FILES_URL, key, path, entry_name),
@@ -62,14 +59,6 @@ class BrowserView(TemplateResponseMixin, LeecherViewMixin, View):
                     entry_name,
                     op.getsize(entry_path),
                 ))
-                symlink_path = op.join(symlink_dir, entry_name)
-                if not op.isfile(symlink_path):
-                    os.symlink(entry_path, symlink_path)
-        # Remove dead symlinks
-        for entry_name in os.listdir(symlink_dir):
-            entry_path = op.join(symlink_dir, entry_name)
-            if not op.isdir(entry_path) and not op.exists(entry_path):
-                os.unlink(entry_path)
         # Flatten files metadata to make it useable in the template
         checked_paths = set()
         if leecher.files_metadata:

@@ -11,7 +11,7 @@
         {% for dir in directories %}
         <li{% if dir in checked_paths %} class="checked"{% endif %}>
             <input type="checkbox" path="{{ dir }}"{% if dir in checked_paths %} checked{% endif %} />
-            <a href="{% url leechy_browse key=key path=dir %}">{{ dir }}</a>
+            <a href="./{{ dir }}/">{{ dir }}</a>
         </li>
         {% endfor %}
     </ul>
