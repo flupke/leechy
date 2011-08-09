@@ -7,7 +7,7 @@
     <div class="toolbar">
         <div class="button">
             <input type="checkbox" id="hide_checked" {% if settings.hide_checked %}checked{% endif %} />
-            <label for="hide_checked">{% trans "Hide checked entries" %}</label>
+            <label for="hide_checked">{% trans "Hide checked items" %}</label>
         </div>
     </div>
 
@@ -38,6 +38,7 @@
 <script type="text/javascript">
     $(function()
     {
+        // Files and directories checkboxes handler
         $(".entry_checkbox").change(function()
         {
             var $this = $(this);
@@ -49,6 +50,7 @@
             $this.parent().toggleClass("checked");
         });
 
+        // Settings persistence
         $(".toolbar input[type=checkbox]").change(function()
         {
             var $this = $(this);
@@ -58,6 +60,7 @@
             });
         });
 
+        // Hide/unhide checked entries
         function hide_checked_entries()
         {
             if ($("#hide_checked").prop("checked")) {
@@ -69,8 +72,30 @@
 
         $("#hide_checked").change(hide_checked_entries);
 
+        // Keep the toolbar on top
+        var toolbar = $(".toolbar");
+        var toolbar_initial_offset = toolbar.offset();
+        var toolbar_initial_width = toolbar.width();
+
+        function pin_toolbar()
+        {
+            if ($(document).scrollTop() > toolbar_initial_offset.top) {
+                $(".toolbar").addClass("pinned");
+                $(".toolbar").css("left", toolbar_initial_offset.left + "px");
+                $(".toolbar").css("width", toolbar_initial_width + "px");
+            } else {
+                $(".toolbar").removeClass("pinned");
+                $(".toolbar").css("left", "");
+                $(".toolbar").css("width", "");
+            }
+        }
+
+        $(window).scroll(pin_toolbar);
+        $(window).resize(pin_toolbar);
+
         // Setup initial state
         hide_checked_entries();
+        pin_toolbar();
     });
 </script>
 {% endblock %}
