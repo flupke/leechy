@@ -114,12 +114,12 @@
             $.each(search_text.split(" "), function(index, word)
             {
                 if ($.trim(word) !== "") {
-                    words.push(word);
+                    words.push(word.toLowerCase());
                 }
             });
             $(".item").each(function()
             {
-                var item = $(this), item_words = item.attr("search_words"), match_count = 0, i;
+                var item = $(this), item_words = item.attr("search_words").toLowerCase(), match_count = 0, i;
                 for (i = 0 ; i < words.length ; i++) {
                     if (item_words.indexOf(words[i]) !== -1) {
                         match_count += 1;
