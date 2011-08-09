@@ -34,7 +34,7 @@ class LeecherViewMixin(object):
 class BrowserView(TemplateResponseMixin, LeecherViewMixin, View):
 
     template_name = "leechy/browse.html"
-    google_split_pattern = re.compile(r"[\s.-]")
+    search_split_pattern = re.compile(r"[\s.-]")
 
     def get(self, request, key, path):
         leecher = self.get_leecher(key)
@@ -61,6 +61,7 @@ class BrowserView(TemplateResponseMixin, LeecherViewMixin, View):
                     rel_path, 
                     full_path,
                     google_url,
+                    " ".join(self.search_words(entry_name)),
                 ))
             else:
                 google_url = self.google_url(op.splitext(entry_name)[0])
@@ -70,6 +71,7 @@ class BrowserView(TemplateResponseMixin, LeecherViewMixin, View):
                     entry_name,
                     op.getsize(entry_path),
                     google_url,
+                    " ".join(self.search_words(entry_name)),
                 ))
         # Flatten files metadata to make it useable in the template
         checked_paths = set()
@@ -87,13 +89,16 @@ class BrowserView(TemplateResponseMixin, LeecherViewMixin, View):
             "settings": leecher.settings,
         })
 
+    def search_words(self, name):
+        return [w for w in self.search_split_pattern.split(name.encode("utf8"))
+                if w.strip()]
+
     def google_url(self, name):
         """
         Given *name*, build a Google search URL.
         """
-        words = self.google_split_pattern.split(name.encode("utf8"))
         return "http://www.google.com/search?%s" % urllib.urlencode(
-                {"q": " ".join(words)})
+                {"q": " ".join(self.search_words(name))})
 
 
 class UpdateFilesMetadataView(LeecherViewMixin, View):        

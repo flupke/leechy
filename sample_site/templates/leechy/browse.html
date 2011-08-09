@@ -9,27 +9,31 @@
             <input type="checkbox" id="hide_checked" {% if settings.hide_checked %}checked{% endif %} />
             <label for="hide_checked">{% trans "Hide checked items" %}</label>
         </div>
+        <div class="search_container">
+            <input type="text" class="search dim" value="{% trans 'Search...' %}" />
+            <div class="reset"></div>
+        </div>
     </div>
 
     <ul class="directories">
         {% if path %}
         <li><a href="../">Parent directory</a></li>
         {% endif %}
-        {% for rel_path, full_path, google_url in directories %}
-        <li{% if full_path in checked_paths %} class="checked"{% endif %}>
+        {% for rel_path, full_path, google_url, search_words in directories %}
+        <li class="item {% if full_path in checked_paths %}checked{% endif %}" search_words="{{ search_words|escape }}">
             <input class="entry_checkbox" type="checkbox" path="{{ full_path }}"{% if full_path in checked_paths %} checked{% endif %} />
             <a href="{{ rel_path }}">{{ rel_path|slice:"-1" }}</a>
-            <a href="{{ google_url }}" target="_" title="{% trans 'Google search' %}"><img src="{{ STATIC_URL }}leechy/images/toolbar_find.png" alt="{% trans 'Google search' %}" /></a>
+            <a href="{{ google_url }}" target="_" title="{% trans 'Google search' %}" class="search_icon"></a>
         </li>
         {% endfor %}
     </ul>
 
     <ul class="files">
-        {% for furl, fpath, fname, fsize, google_url in files %}
-        <li{% if fpath in checked_paths %} class="checked"{% endif %}>
+        {% for furl, fpath, fname, fsize, google_url, search_words in files %}
+        <li class="item {% if fpath in checked_paths %}checked{% endif %}" search_words="{{ search_words|escape }}">
             <input class="entry_checkbox" type="checkbox" path="{{ fpath }}"{% if fpath in checked_paths %} checked{% endif %} />
             <a href="{{ furl }}">{{ fname }}</a>
-            <a href="{{ google_url }}" target="_" title="{% trans 'Google search' %}"><img src="{{ STATIC_URL }}leechy/images/toolbar_find.png" alt="{% trans 'Google search' %}" /></a>
+            <a href="{{ google_url }}" target="_" title="{% trans 'Google search' %}" class="search_icon"></a>
             <div class="right">{{ fsize|filesizeformat }}</div>
         </li>
         {% endfor %}
@@ -66,9 +70,9 @@
         function hide_checked_entries()
         {
             if ($("#hide_checked").prop("checked")) {
-                $(".checked").hide();
+                $(".item.checked").hide();
             } else {
-                $(".checked").show();
+                $(".item.checked").show();
             }
         }
 
@@ -82,22 +86,81 @@
         function pin_toolbar()
         {
             if ($(document).scrollTop() > toolbar_initial_offset.top) {
-                $(".toolbar").addClass("pinned");
-                $(".toolbar").css("left", toolbar_initial_offset.left + "px");
-                $(".toolbar").css("width", toolbar_initial_width + "px");
+                toolbar.addClass("pinned");
+                toolbar.css("left", toolbar_initial_offset.left + "px");
+                toolbar.css("width", toolbar_initial_width + "px");
             } else {
-                $(".toolbar").removeClass("pinned");
-                $(".toolbar").css("left", "");
-                $(".toolbar").css("width", "");
+                toolbar.removeClass("pinned");
+                toolbar.css("left", "");
+                toolbar.css("width", "");
             }
         }
 
         $(window).scroll(pin_toolbar);
         $(window).resize(pin_toolbar);
 
+        // Search
+        var search_input = $(".search"), search_helper = "{% trans 'Search...' %}";
+
+        function filter_items()
+        {
+            var words = [], search_text = $.trim(search_input.val());
+            if (search_text === search_helper || search_text === "") {
+                // Empty search
+                $(".item").show();
+                hide_checked_entries();
+                return;
+            }
+            $.each(search_text.split(" "), function(index, word)
+            {
+                if ($.trim(word) !== "") {
+                    words.push(word);
+                }
+            });
+            $(".item").each(function()
+            {
+                var item = $(this), item_words = item.attr("search_words"), match_count = 0, i;
+                for (i = 0 ; i < words.length ; i++) {
+                    if (item_words.indexOf(words[i]) !== -1) {
+                        match_count += 1;
+                    }
+                };
+                if (match_count === words.length) {
+                    item.show();
+                } else {
+                    item.hide();
+                }
+            });
+        }
+
+        search_input.focus(function()
+        {
+            if (search_input.val() == search_helper){ 
+                search_input.val("");
+                search_input.removeClass("dim");
+            }
+        }).blur(function()
+        {
+            if (search_input.val() == "") {
+                search_input.val(search_helper);
+                search_input.addClass("dim");
+            }
+        }).keyup(filter_items);
+
+        $(".search_container .reset").click(function()
+        {
+            search_input.val(search_helper);
+            search_input.addClass("dim");
+            filter_items();
+        });
+
         // Setup initial state
         hide_checked_entries();
         pin_toolbar();
+        if (search_input.val() != search_helper) {
+            search_input.removeClass("dim");
+        }
+        filter_items();
     });
 </script>
 {% endblock %}
