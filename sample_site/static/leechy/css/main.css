@@ -302,6 +302,10 @@ ul.files li {
     position: relative;
 }
 
+.browser img {
+    vertical-align: middle;
+}
+
 li.checked a {
     color: #69c;
 }

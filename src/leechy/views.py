@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
+import re
+import urllib
 import os.path as op
 import datetime
 from django.views.generic.base import View, TemplateResponseMixin
@@ -32,6 +34,7 @@ class LeecherViewMixin(object):
 class BrowserView(TemplateResponseMixin, LeecherViewMixin, View):
 
     template_name = "leechy/browse.html"
+    google_split_pattern = re.compile(r"[\s.-]")
 
     def get(self, request, key, path):
         leecher = self.get_leecher(key)
@@ -53,13 +56,20 @@ class BrowserView(TemplateResponseMixin, LeecherViewMixin, View):
             if op.isdir(entry_path):
                 rel_path = entry_name + "/"
                 full_path = op.join(path, rel_path)
-                directories.append((rel_path, full_path))
+                google_url = self.google_url(entry_name)
+                directories.append((
+                    rel_path, 
+                    full_path,
+                    google_url,
+                ))
             else:
+                google_url = self.google_url(op.splitext(entry_name)[0])
                 files.append((
                     op.join(settings.FILES_URL, key, path, entry_name),
                     op.join(path, entry_name),
                     entry_name,
                     op.getsize(entry_path),
+                    google_url,
                 ))
         # Flatten files metadata to make it useable in the template
         checked_paths = set()
@@ -76,6 +86,14 @@ class BrowserView(TemplateResponseMixin, LeecherViewMixin, View):
             "checked_paths": checked_paths,
             "settings": leecher.settings,
         })
+
+    def google_url(self, name):
+        """
+        Given *name*, build a Google search URL.
+        """
+        words = self.google_split_pattern.split(name)
+        return "http://www.google.com/?%s" % urllib.urlencode(
+                {"q": " ".join(words)})
 
 
 class UpdateFilesMetadataView(LeecherViewMixin, View):        

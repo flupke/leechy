@@ -15,19 +15,21 @@
         {% if path %}
         <li><a href="../">Parent directory</a></li>
         {% endif %}
-        {% for rel_path, full_path in directories %}
+        {% for rel_path, full_path, google_url in directories %}
         <li{% if full_path in checked_paths %} class="checked"{% endif %}>
             <input class="entry_checkbox" type="checkbox" path="{{ full_path }}"{% if full_path in checked_paths %} checked{% endif %} />
             <a href="{{ rel_path }}">{{ rel_path|slice:"-1" }}</a>
+            <a href="{{ google_url }}" target="_" title="{% trans 'Google search' %}"><img src="{{ STATIC_URL }}leechy/images/toolbar_find.png" alt="{% trans 'Google search' %}" /></a>
         </li>
         {% endfor %}
     </ul>
 
     <ul class="files">
-        {% for furl, fpath, fname, fsize in files %}
+        {% for furl, fpath, fname, fsize, google_url in files %}
         <li{% if fpath in checked_paths %} class="checked"{% endif %}>
             <input class="entry_checkbox" type="checkbox" path="{{ fpath }}"{% if fpath in checked_paths %} checked{% endif %} />
             <a href="{{ furl }}">{{ fname }}</a>
+            <a href="{{ google_url }}" target="_" title="{% trans 'Google search' %}"><img src="{{ STATIC_URL }}leechy/images/toolbar_find.png" alt="{% trans 'Google search' %}" /></a>
             <div class="right">{{ fsize|filesizeformat }}</div>
         </li>
         {% endfor %}
