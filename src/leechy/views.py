@@ -100,8 +100,11 @@ class BrowserView(TemplateResponseMixin, LeecherViewMixin, View):
         """
         Given *name*, build a Google search URL.
         """
+        words = self.search_words(name)
+        for pattern in settings.GOOGLE_SEARCH_FILTERS:
+            words = [w for w in words if not pattern.match(w)]
         return "http://www.google.com/search?%s" % urllib.urlencode(
-                {"q": " ".join(self.search_words(name))})
+                {"q": " ".join(words)})
 
 
 class UpdateFilesMetadataView(LeecherViewMixin, View):        
