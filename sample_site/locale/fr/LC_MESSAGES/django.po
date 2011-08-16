@@ -1,0 +1,83 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-08-16 14:31-0500\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1)\n"
+
+#: templates/404.html:4
+msgid "Page not found"
+msgstr "Page introuvable"
+
+#: templates/500.html:4
+msgid "Error"
+msgstr "Erreur"
+
+#: templates/500.html:6
+msgid ""
+"\n"
+"    The site encountered an error, admins are working on it.\n"
+"    "
+msgstr ""
+"\n"
+"Le site a rencontré une erreur, les administrateurs ont été informés"
+
+#: templates/leechy/browse.html:4
+msgid "Index of"
+msgstr "Index de"
+
+#: templates/leechy/browse.html:10
+msgid "Hide checked items"
+msgstr "Cacher les éléments cochés"
+
+#: templates/leechy/browse.html:13 templates/leechy/browse.html.py:103
+msgid "Search..."
+msgstr "Recherche..."
+
+#: templates/leechy/browse.html:26 templates/leechy/browse.html.py:36
+msgid "Google search"
+msgstr "Recherche Google"
+
+#: templates/leechy/emails/invitation.txt:1
+#, python-format
+msgid "Hi %(leecher_name)s,"
+msgstr "Salut %(leecher_name)s,"
+
+#: templates/leechy/emails/invitation.txt:1
+msgid "Hi,"
+msgstr "Salut,"
+
+#: templates/leechy/emails/invitation.txt:1
+#, python-format
+msgid ""
+"\n"
+"\n"
+"%(innkeeper_name)s invited you to browse its files. They are visible at "
+"the \n"
+"following address:\n"
+"\n"
+"%(leecher_uri)s\n"
+"\n"
+"Enjoy !\n"
+msgstr ""
+"\n"
+"\n"
+"%(innkeeper_name)s vous invite à aller voir ses fichiers. Ils sont visible "
+"à\n"
+"cette adresse :\n"
+"\n"
+"%(leecher_uri)s\n"
+"\n"
+"Amusez-vous bien !\n"
