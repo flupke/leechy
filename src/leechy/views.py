@@ -53,6 +53,7 @@ class BrowserView(TemplateResponseMixin, LeecherViewMixin, View):
             if settings.EXCLUDE_FILES.match(entry_name):
                 continue
             entry_path = op.join(source_dir, entry_name)
+            mtime = datetime.datetime.fromtimestamp(op.getmtime(entry_path))
             if op.isdir(entry_path):
                 rel_path = entry_name + "/"
                 full_path = op.join(path, rel_path)
@@ -60,6 +61,7 @@ class BrowserView(TemplateResponseMixin, LeecherViewMixin, View):
                 directories.append((
                     rel_path, 
                     full_path,
+                    mtime,
                     google_url,
                     " ".join(self.search_words(entry_name)),
                 ))
@@ -70,6 +72,7 @@ class BrowserView(TemplateResponseMixin, LeecherViewMixin, View):
                     op.join(path, entry_name),
                     entry_name,
                     op.getsize(entry_path),
+                    mtime,
                     google_url,
                     " ".join(self.search_words(entry_name)),
                 ))

@@ -19,22 +19,26 @@
         {% if path %}
         <li><a href="../">Parent directory</a></li>
         {% endif %}
-        {% for rel_path, full_path, google_url, search_words in directories %}
+        {% for rel_path, full_path, mtime, google_url, search_words in directories %}
         <li class="item {% if full_path in checked_paths %}checked{% endif %}" search_words="{{ search_words|escape }}">
             <input class="entry_checkbox" type="checkbox" path="{{ full_path }}"{% if full_path in checked_paths %} checked{% endif %} />
             <a href="{{ rel_path }}">{{ rel_path|slice:"-1" }}</a>
             <a href="{{ google_url }}" target="_blank" title="{% trans 'Google search' %}" class="search_icon"></a>
+            <div class="right">{{ mtime|date:"SHORT_DATETIME_FORMAT" }}</div>
         </li>
         {% endfor %}
     </ul>
 
     <ul class="files">
-        {% for furl, fpath, fname, fsize, google_url, search_words in files %}
+        {% for furl, fpath, fname, fsize, fmtime, google_url, search_words in files %}
         <li class="item {% if fpath in checked_paths %}checked{% endif %}" search_words="{{ search_words|escape }}">
             <input class="entry_checkbox" type="checkbox" path="{{ fpath }}"{% if fpath in checked_paths %} checked{% endif %} />
             <a href="{{ furl }}">{{ fname }}</a>
             <a href="{{ google_url }}" target="_blank" title="{% trans 'Google search' %}" class="search_icon"></a>
-            <div class="right">{{ fsize|filesizeformat }}</div>
+            <div class="right">
+                {{ fsize|filesizeformat }},
+                {{ fmtime|date:"SHORT_DATETIME_FORMAT" }}
+            </div>
         </li>
         {% endfor %}
     </ul>
