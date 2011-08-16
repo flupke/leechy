@@ -103,6 +103,8 @@ class BrowserView(TemplateResponseMixin, LeecherViewMixin, View):
         words = self.search_words(name)
         for pattern in settings.GOOGLE_SEARCH_FILTERS:
             words = [w for w in words if not pattern.match(w)]
+            if not words:
+                break
         return "http://www.google.com/search?%s" % urllib.urlencode(
                 {"q": " ".join(words)})
 
