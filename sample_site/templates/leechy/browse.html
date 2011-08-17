@@ -24,7 +24,7 @@
             <input class="entry_checkbox" type="checkbox" path="{{ full_path }}"{% if full_path in checked_paths %} checked{% endif %} />
             <a href="{{ rel_path }}">{{ rel_path|slice:"-1" }}</a>
             <a href="{{ google_url }}" target="_blank" title="{% trans 'Google search' %}" class="search_icon"></a>
-            <div class="right">{{ mtime|date:"SHORT_DATETIME_FORMAT" }}</div>
+            <div class="right">{{ mtime|timesince }}</div>
         </li>
         {% endfor %}
     </ul>
@@ -37,7 +37,7 @@
             <a href="{{ google_url }}" target="_blank" title="{% trans 'Google search' %}" class="search_icon"></a>
             <div class="right">
                 {{ fsize|filesizeformat }},
-                {{ fmtime|date:"SHORT_DATETIME_FORMAT" }}
+                {{ fmtime|timesince }}
             </div>
         </li>
         {% endfor %}
