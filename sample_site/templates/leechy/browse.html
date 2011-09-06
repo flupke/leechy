@@ -1,7 +1,8 @@
 {% extends "base.html" %}
 {% load i18n %}
+
 {% block content %}
-<h2>{% trans "Index of" %} /{{ path }}</h2>
+<h2>{% trans "Index of" %} {% for rel_link, name in split_path %}/{% if not forloop.last %}<a href="{{ rel_link }}">{{ name }}</a>{% else %}{{ name }}{% endif %}{% empty %}/{% endfor %}</h2>
 
 <div class="browser">
     <div class="toolbar">
@@ -15,36 +16,54 @@
         </div>
     </div>
 
-    <ul class="directories">
-        {% if path %}
-        <li><a href="../">Parent directory</a></li>
-        {% endif %}
-        {% for rel_path, full_path, mtime, google_url, search_words in directories %}
-        <li class="item {% if full_path in checked_paths %}checked{% endif %}" search_words="{{ search_words|escape }}">
-            <input class="entry_checkbox" type="checkbox" path="{{ full_path }}"{% if full_path in checked_paths %} checked{% endif %} />
-            <a href="{{ rel_path }}">{{ rel_path|slice:"-1" }}</a>
-            <a href="{{ google_url }}" target="_blank" title="{% trans 'Google search' %}" class="search_icon"></a>
-            <div class="right">{{ mtime|date:"SHORT_DATETIME_FORMAT" }}</div>
-        </li>
-        {% endfor %}
-    </ul>
+    {% if path %}
+    <div class="directory upper_dir_link"><a href="../">Parent directory</a></div>
+    {% endif %}
 
-    <ul class="files">
-        {% for furl, fpath, fname, fsize, fmtime, google_url, search_words in files %}
-        <li class="item {% if fpath in checked_paths %}checked{% endif %}" search_words="{{ search_words|escape }}">
-            <input class="entry_checkbox" type="checkbox" path="{{ fpath }}"{% if fpath in checked_paths %} checked{% endif %} />
-            <a href="{{ furl }}">{{ fname }}</a>
-            <a href="{{ google_url }}" target="_blank" title="{% trans 'Google search' %}" class="search_icon"></a>
-            <div class="right">
-                {{ fsize|filesizeformat }},
-                {{ fmtime|date:"SHORT_DATETIME_FORMAT" }}
-            </div>
-        </li>
-        {% endfor %}
-    </ul>
+    <table id="browser_table">
+        <thead>
+            <tr>
+                <th>{% trans "Name" %}</th>
+                <th>{% trans "Date" %}</th>
+                <th>{% trans "Size" %}</th>
+            </tr>
+        </thead>
+        <tbody class="browser_content">
+            {% for rel_path, full_path, mtime, mtime_timestamp, google_url, search_words in directories %}
+            <tr class="item {% if full_path in checked_paths %}checked{% endif %}" search_words="{{ search_words|escape }}">
+                <td class="directory">
+                    <input class="entry_checkbox" type="checkbox" path="{{ full_path }}"{% if full_path in checked_paths %} checked{% endif %} />
+                    <a href="{{ rel_path }}">{{ rel_path|slice:"-1" }}</a>
+                    <a href="{{ google_url }}" target="_blank" title="{% trans 'Google search' %}" class="search_icon"></a>
+                </td>
+                <td tablesorter="{{ mtime_timestamp }}">
+                    {{ mtime|date:"SHORT_DATETIME_FORMAT" }}
+                </td>
+                <td tablesorter="0"></td>
+            </tr>
+            {% endfor %}
+
+            {% for furl, fpath, fname, fsize, fmtime, mtime_timestamp, google_url, search_words in files %}
+            <tr class="item {% if fpath in checked_paths %}checked{% endif %}" search_words="{{ search_words|escape }}">
+                <td class="file">
+                    <input class="entry_checkbox" type="checkbox" path="{{ fpath }}"{% if fpath in checked_paths %} checked{% endif %} />
+                    <a href="{{ furl }}">{{ fname }}</a>
+                    <a href="{{ google_url }}" target="_blank" title="{% trans 'Google search' %}" class="search_icon"></a>
+                </td>
+                <td tablesorter="{{ mtime_timestamp }}">
+                    {{ fmtime|date:"SHORT_DATETIME_FORMAT" }}
+                </td>
+                <td tablesorter="{{ fsize }}">
+                    {{ fsize|filesizeformat }}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
 
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}/leechy/js/jquery.tablesorter.min.js"></script>
 <script type="text/javascript">
     $(function()
     {
@@ -156,6 +175,41 @@
             search_input.val(search_helper);
             search_input.addClass("dim");
             filter_items();
+        });
+
+        // TableSorter
+        $.tablesorter.addParser({
+            id: "dir_entry",
+            is: function() { return false; },
+            format: function(text, table, cell) {
+                text = $.trim(text.toLowerCase());
+                if ($(cell).hasClass("directory")) {
+                    // Put directories in front of the ASCII sorting order
+                    return "                 " + text;
+                }
+                return text;
+            },
+            type: "text",
+        });
+
+        $.tablesorter.addParser({
+            id: "tablesorter_attr",
+            is: function() { return false; },
+            format: function(text, table, cell) {
+                return $.tablesorter.formatFloat($(cell).attr("tablesorter"));
+            },
+            type: "numeric",
+        });
+
+        $("#browser_table").tablesorter({
+            headers: {
+                0: {sorter: "dir_entry"},
+                1: {sorter: "tablesorter_attr"},
+                2: {sorter: "tablesorter_attr"}
+            },
+            sortList: [[0, 0]],
+            cssAsc: "sort_up",
+            cssDesc: "sort_down"
         });
 
         // Setup initial state

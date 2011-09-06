@@ -53,7 +53,8 @@ class BrowserView(TemplateResponseMixin, LeecherViewMixin, View):
             if settings.EXCLUDE_FILES.match(entry_name):
                 continue
             entry_path = op.join(source_dir, entry_name)
-            mtime = datetime.datetime.fromtimestamp(op.getmtime(entry_path))
+            mtime_timestamp = op.getmtime(entry_path)
+            mtime = datetime.datetime.fromtimestamp(mtime_timestamp)
             if op.isdir(entry_path):
                 rel_path = entry_name + "/"
                 full_path = op.join(path, rel_path)
@@ -62,6 +63,7 @@ class BrowserView(TemplateResponseMixin, LeecherViewMixin, View):
                     rel_path, 
                     full_path,
                     mtime,
+                    mtime_timestamp,
                     google_url,
                     " ".join(self.search_words(entry_name)),
                 ))
@@ -73,6 +75,7 @@ class BrowserView(TemplateResponseMixin, LeecherViewMixin, View):
                     entry_name,
                     op.getsize(entry_path),
                     mtime,
+                    mtime_timestamp,
                     google_url,
                     " ".join(self.search_words(entry_name)),
                 ))
@@ -82,9 +85,18 @@ class BrowserView(TemplateResponseMixin, LeecherViewMixin, View):
             for name, metadata in leecher.files_metadata.items():
                 if metadata.get("checked", False):
                     checked_paths.add(name)
+        # Split the path of the current page
+        split_path = []
+        rel = ""
+        for comp in reversed(path.split("/")):
+            if not comp:
+                continue
+            split_path.insert(0, (rel, comp))
+            rel += "../"
         return self.render_to_response({
             "key": key,
             "path": path,
+            "split_path": split_path,
             "leecher": leecher,
             "directories": directories,
             "files": files,

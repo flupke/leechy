@@ -16,7 +16,7 @@ html {margin:0;padding:0;border:0;}
 body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, code, del, dfn, em, img, q, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, dialog, figure, footer, header, hgroup, nav, section {margin:0;padding:0;border:0;font-size:100%;font:inherit;vertical-align:baseline;}
 article, aside, details, figcaption, figure, dialog, footer, header, hgroup, menu, nav, section {display:block;}
 body {line-height:1.5;background:white;}
-table {border-collapse:separate;border-spacing:0;}
+table {border-collapse:collapse;border-spacing:0;line-height:1;}
 caption, th, td {text-align:left;font-weight:normal;float:none !important;}
 table, th, td {vertical-align:middle;}
 blockquote:before, blockquote:after, q:before, q:after {content:'';}
@@ -60,9 +60,6 @@ dl dt {font-weight:bold;}
 dd {margin-left:1.5em;}
 table {margin-bottom:1.4em;width:100%;}
 th {font-weight:bold;}
-thead th {background:#c3d9ff;}
-th, td, caption {padding:4px 10px 4px 5px;}
-tbody tr:nth-child(even) td, tbody tr.even td {background:#e5ecf9;}
 tfoot {font-style:italic;}
 caption {background:#eee;}
 .small {font-size:.8em;margin-bottom:1.875em;line-height:1.875em;}
@@ -264,32 +261,37 @@ hr.space {background:#fff;color:#fff;visibility:hidden;}
 .clearfix, .container {display:block;}
 .clear {clear:both;}
 
+/***************************************************************************/
 
-ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
+th, .upper_dir_link {
+    padding-bottom: 1em;
 }
 
-ul li:hover {
+th {
+    padding: 0.5em;
+    cursor: pointer;
+    background-color: #ddd;
+}
+
+.browser_content tr:hover {
     background-color: #f8f8f8;
 }
 
-ul input {
+.browser_content input {
     margin: 0;
 }
 
-ul.directories input {
+.browser_content .directory input {
     margin-left: -3px;
 }
 
-ul.directories li:before {
+.directory:before {
     margin-right: 5px;
     vertical-align: middle;
     content: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAAXNSR0IArs4c6QAAAXdQTFRFaQAAuysSvCsTuywSvCwTuy4UvC8UvDAXvDIVvTUWvjUWvjgYvzoZvzsZvz0awEAbwUMdwkYkxUwl1E8ZxlIn1FAZ1FEZ1FEa1FIa1VIaxlYq1lsf1lwfyV0911wf110g114g114h2Wcl2Wgm2Wkm2Wom2Wonz25O23Qs23Us23Ut3HUt3HYt0XZS3Hcy0XhR3Xs31H5g3oE03oA/3oI03oI234Q41YVg4IY914Zk1Yhm4YtF14xk2Ixp2JBf4o9M44xp2Y9q2ZFq2ZNs2pRs45RU45VM25Zt5JRt25dt5JdY25hv5JlS25pv5Zlc25tv25xw5Ztf5ZxY251xqKio5p5b5pxxqamp5qBeq6ur56Fi56Rlrq6u6KVo6Kds6Kll6alw6apx6atp6axs6q5v6rBz67CI67J267J467N57Lh57bl77rp/7bt/7rt/7ruA7ryA7ryB7r+Z8cej8s2n1NTU89Ks9dex9dix9dmx9dmy/v7+////PWSQYQAAAAF0Uk5TAEDm2GYAAAABYktHRACIBR1IAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH2wYdFCsjVia7GQAAAJ9JREFUGBkFwSFOQ0EQANA3P5OARXADSLgC9yDhgsh6PBfAYjBYBA0pTbvdneE9AADxBK5fANIDejwvsJMgru7BJ8nb7Vo1V3fP9XhIbu4CQeA1Gf23hRBm9TEZNQVV3b2OybnPXV1da41xSC69X/My5qpe20xOh69Vs8QmrOR7/0MQIsxk/J6JLQhRSZ1ONiKEqPRR711dXavkFgAA/gEvilyYYaqumgAAAABJRU5ErkJggg==");
 }
 
-ul.files li {
+.file {
     padding-left: 21px;
 }
 
@@ -310,7 +312,7 @@ ul.files li {
     display: inline-block;
 }
 
-li.checked a {
+.checked a {
     color: #69c;
 }
 
@@ -381,4 +383,12 @@ li.checked a {
     width: 11px;
     height: 11px;
     cursor: pointer;
+}
+
+.sort_down {
+    background: #ddd url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAQAAAC1+jfqAAAAAXNSR0IArs4c6QAAAAJiS0dEAP+Hj8y/AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH2wkGDSsFkpThVAAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAAA8SURBVCjPY2AYYmAvw3843ItNgSWSAkvsZmyGSm/GZYkBwz+g9D8gjROsAipYhc+hmgw/gRgv8B58wQsAWE4XimT5AugAAAAASUVORK5CYII=") right center no-repeat;
+}
+
+.sort_up {
+    background: #ddd url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAQAAAC1+jfqAAAAAXNSR0IArs4c6QAAAAJiS0dEAP+Hj8y/AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH2wkGDSsnR/SgsAAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAAA9SURBVCjPY2AYjMAbv7Qmw08gxgNWMfwHYpzAgOEfUME/II0DbAZKg+Bm7NKWUGkQtMSmYC+Sgr0MQwkAAPKIF4qzfKgfAAAAAElFTkSuQmCC") right center no-repeat;
 }
