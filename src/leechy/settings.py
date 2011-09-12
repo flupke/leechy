@@ -32,8 +32,9 @@ INVITATION_SUBJECT = getattr(settings, "LEECHY_INVITATION_SUBJECT",
 INVITATION_EMAIL_FROM = getattr(settings, "LEECHY_INVITATION_EMAIL_FROM", 
     "leechy@host.com")
 
-EXCLUDE_FILES = re.compile(
-        getattr(settings, "LEECHY_EXCLUDE_FILES", "^\..*"))
+EXCLUDE_FILES = getattr(settings, "LEECHY_EXCLUDE_FILES", ["^\..*"])
+EXCLUDE_FILES = [p if hasattr(p, "match") else re.compile(p) 
+        for p in EXCLUDE_FILES]
 
 GOOGLE_SEARCH_FILTERS = getattr(settings, "LEECHY_GOOGLE_SEARCH_FILTERS", [])
 GOOGLE_SEARCH_FILTERS = [p if hasattr(p, "match") else re.compile(p) 
