@@ -17,7 +17,7 @@
     </div>
 
     {% if path %}
-    <div class="directory upper_dir_link"><a href="../">Parent directory</a></div>
+    <div class="directory upper_dir_link"><a href="../">{% trans "Parent directory" %}</a></div>
     {% endif %}
 
     <table id="browser_table">
@@ -29,32 +29,32 @@
             </tr>
         </thead>
         <tbody class="browser_content">
-            {% for rel_path, full_path, mtime, mtime_timestamp, google_url, search_words in directories %}
-            <tr class="item {% if full_path in checked_paths %}checked{% endif %}" search_words="{{ search_words|escape }}">
+            {% for dir in directories %}
+            <tr class="item {% if dir.rel_path in checked_paths %}checked{% endif %}" search_words="{{ dir.search_words|escape }}">
                 <td class="directory">
-                    <input class="entry_checkbox" type="checkbox" path="{{ full_path }}"{% if full_path in checked_paths %} checked{% endif %} />
-                    <a href="{{ rel_path }}">{{ rel_path|slice:"-1" }}</a>
-                    <a href="{{ google_url }}" target="_blank" title="{% trans 'Google search' %}" class="search_icon"></a>
+                    <input class="entry_checkbox" type="checkbox" path="{{ dir.rel_path }}"{% if dir.rel_path in checked_paths %} checked{% endif %} />
+                    <a href="{{ dir.name }}/">{{ dir.name }}</a>
+                    <a href="{{ dir.google_url }}" target="_blank" title="{% trans 'Google search' %}" class="search_icon"></a>
                 </td>
-                <td tablesorter="{{ mtime_timestamp }}">
-                    {{ mtime|date:"SHORT_DATETIME_FORMAT" }}
+                <td tablesorter="{{ dir.timestamp }}">
+                    {{ dir.mtime|date:"SHORT_DATETIME_FORMAT" }}
                 </td>
                 <td tablesorter="0"></td>
             </tr>
             {% endfor %}
 
-            {% for furl, fpath, fname, fsize, fmtime, mtime_timestamp, google_url, search_words in files %}
-            <tr class="item {% if fpath in checked_paths %}checked{% endif %}" search_words="{{ search_words|escape }}">
+            {% for file in files %}
+            <tr class="item {% if file.rel_path in checked_paths %}checked{% endif %}" search_words="{{ file.search_words|escape }}">
                 <td class="file">
-                    <input class="entry_checkbox" type="checkbox" path="{{ fpath }}"{% if fpath in checked_paths %} checked{% endif %} />
-                    <a href="{{ furl }}">{{ fname }}</a>
-                    <a href="{{ google_url }}" target="_blank" title="{% trans 'Google search' %}" class="search_icon"></a>
+                    <input class="entry_checkbox" type="checkbox" path="{{ file.rel_path }}"{% if file.rel_path in checked_paths %} checked{% endif %} />
+                    <a href="{{ file.url }}">{{ file.name }}</a>
+                    <a href="{{ file.google_url }}" target="_blank" title="{% trans 'Google search' %}" class="search_icon"></a>
                 </td>
-                <td tablesorter="{{ mtime_timestamp }}">
-                    {{ fmtime|date:"SHORT_DATETIME_FORMAT" }}
+                <td tablesorter="{{ file.timestamp }}">
+                    {{ file.mtime|date:"SHORT_DATETIME_FORMAT" }}
                 </td>
-                <td tablesorter="{{ fsize }}">
-                    {{ fsize|filesizeformat }}
+                <td tablesorter="{{ file.size }}">
+                    {{ file.size|filesizeformat }}
                 </td>
             </tr>
             {% endfor %}

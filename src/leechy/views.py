@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
+import json
 import os
-import re
-import urllib
 import os.path as op
 import datetime
 from django.views.generic.base import View, TemplateResponseMixin
@@ -9,6 +8,7 @@ from django import http
 from django.shortcuts import get_object_or_404
 from leechy import settings
 from leechy.models import Leecher
+from leechy.files import Directory, File
 
 
 class HomeView(TemplateResponseMixin, View):
@@ -20,6 +20,9 @@ class HomeView(TemplateResponseMixin, View):
 
 
 class LeecherViewMixin(object):
+    """
+    Mixin class for leechers views.
+    """
 
     def get_leecher(self, key):
         # Get Leecher from its key and update its last_visit timestamp
@@ -31,13 +34,12 @@ class LeecherViewMixin(object):
         return leecher
 
 
-class BrowserView(TemplateResponseMixin, LeecherViewMixin, View):
+class BrowserViewMixin(object):
+    """
+    Mixin class for browser views.
+    """
 
-    template_name = "leechy/browse.html"
-    search_split_pattern = re.compile(r"[\s.-]")
-
-    def get(self, request, key, path):
-        leecher = self.get_leecher(key)
+    def listdir(self, key, path):
         # Create root symlink
         symlink_dir = op.join(settings.FILES_ROOT, key)
         if not op.isdir(symlink_dir):
@@ -52,33 +54,24 @@ class BrowserView(TemplateResponseMixin, LeecherViewMixin, View):
             for pattern in settings.EXCLUDE_FILES:
                 if pattern.match(entry_name):
                     continue
-            entry_path = op.join(source_dir, entry_name)
-            mtime_timestamp = op.getmtime(entry_path)
-            mtime = datetime.datetime.fromtimestamp(mtime_timestamp)
-            if op.isdir(entry_path):
-                rel_path = entry_name + "/"
-                full_path = op.join(path, rel_path)
-                google_url = self.google_url(entry_name)
-                directories.append((
-                    rel_path, 
-                    full_path,
-                    mtime,
-                    mtime_timestamp,
-                    google_url,
-                    " ".join(self.search_words(entry_name)),
-                ))
+            full_path = op.join(source_dir, entry_name)
+            rel_path = op.join(path, entry_name)
+            if op.isdir(full_path):
+                directories.append(Directory(entry_name, full_path, rel_path))
             else:
-                google_url = self.google_url(op.splitext(entry_name)[0])
-                files.append((
-                    op.join(settings.FILES_URL, key, path, entry_name),
-                    op.join(path, entry_name),
-                    entry_name,
-                    op.getsize(entry_path),
-                    mtime,
-                    mtime_timestamp,
-                    google_url,
-                    " ".join(self.search_words(entry_name)),
-                ))
+                files.append(File(entry_name, full_path, rel_path, 
+                    op.join(settings.FILES_URL, key, path, entry_name)))
+        return directories, files
+
+
+class BrowserView(TemplateResponseMixin, LeecherViewMixin, BrowserViewMixin,
+        View):
+
+    template_name = "leechy/browse.html"
+
+    def get(self, request, key, path):
+        leecher = self.get_leecher(key)
+        directories, files = self.listdir(key, path)
         # Flatten files metadata to make it useable in the template
         checked_paths = set()
         if leecher.files_metadata:
@@ -104,21 +97,16 @@ class BrowserView(TemplateResponseMixin, LeecherViewMixin, View):
             "settings": leecher.settings,
         })
 
-    def search_words(self, name):
-        return [w for w in self.search_split_pattern.split(name.encode("utf8"))
-                if w.strip()]
 
-    def google_url(self, name):
-        """
-        Given *name*, build a Google search URL.
-        """
-        words = self.search_words(name)
-        for pattern in settings.GOOGLE_SEARCH_FILTERS:
-            words = [w for w in words if not pattern.match(w)]
-            if not words:
-                break
-        return "http://www.google.com/search?%s" % urllib.urlencode(
-                {"q": " ".join(words)})
+class JsonBrowserView(LeecherViewMixin, BrowserViewMixin, View):
+
+    def get(self, request, key, path):
+        self.get_leecher(key)
+        directories, files = self.listdir(key, path)
+        return http.HttpResponse(json.dumps({
+            "directories": [d.as_dict() for d in directories], 
+            "files": [f.as_dict() for f in files],
+        }))
 
 
 class UpdateFilesMetadataView(LeecherViewMixin, View):        
