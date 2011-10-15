@@ -15,10 +15,11 @@ class Entry(object):
     
     search_split_pattern = re.compile(r"[\s.-]")
 
-    def __init__(self, name, full_path, rel_path):
+    def __init__(self, name, full_path, rel_path, metadata):
         self.name = name
         self.full_path = full_path
         self.rel_path = rel_path
+        self.metadata = metadata
         self.timestamp = op.getmtime(full_path)
         self.mtime = datetime.datetime.fromtimestamp(self.timestamp)
 
@@ -45,8 +46,8 @@ class Entry(object):
 
 class File(Entry):
 
-    def __init__(self, name, full_path, rel_path, url):
-        super(File, self).__init__(name, full_path, rel_path)
+    def __init__(self, name, full_path, rel_path, metadata, url):
+        super(File, self).__init__(name, full_path, rel_path, metadata)
         self.url = url
         self.size = op.getsize(full_path)
 

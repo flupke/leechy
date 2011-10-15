@@ -30,9 +30,9 @@
         </thead>
         <tbody class="browser_content">
             {% for dir in directories %}
-            <tr class="item {% if dir.rel_path in checked_paths %}checked{% endif %}" search_words="{{ dir.search_words|escape }}">
+            <tr class="item {% if dir.metadata.checked %}checked{% endif %}" search_words="{{ dir.search_words|escape }}">
                 <td class="directory">
-                    <input class="entry_checkbox" type="checkbox" path="{{ dir.rel_path }}"{% if dir.rel_path in checked_paths %} checked{% endif %} />
+                    <input class="entry_checkbox" type="checkbox" path="{{ dir.rel_path }}"{% if dir.metadata.checked %} checked{% endif %} />
                     <a href="{{ dir.name }}/">{{ dir.name }}</a>
                     <a href="{{ dir.google_url }}" target="_blank" title="{% trans 'Google search' %}" class="search_icon"></a>
                 </td>
@@ -44,9 +44,9 @@
             {% endfor %}
 
             {% for file in files %}
-            <tr class="item {% if file.rel_path in checked_paths %}checked{% endif %}" search_words="{{ file.search_words|escape }}">
+            <tr class="item {% if file.metadata.checked %}checked{% endif %}" search_words="{{ file.search_words|escape }}">
                 <td class="file">
-                    <input class="entry_checkbox" type="checkbox" path="{{ file.rel_path }}"{% if file.rel_path in checked_paths %} checked{% endif %} />
+                    <input class="entry_checkbox" type="checkbox" path="{{ file.rel_path }}"{% if file.metadata.checked %} checked{% endif %} />
                     <a href="{{ file.url }}">{{ file.name }}</a>
                     <a href="{{ file.google_url }}" target="_blank" title="{% trans 'Google search' %}" class="search_icon"></a>
                 </td>

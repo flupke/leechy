@@ -39,7 +39,9 @@ class BrowserViewMixin(object):
     Mixin class for browser views.
     """
 
-    def listdir(self, key, path):
+    def listdir(self, key, path, metadata):
+        if metadata is None:
+            metadata = {}
         # Create root symlink
         symlink_dir = op.join(settings.FILES_ROOT, key)
         if not op.isdir(symlink_dir):
@@ -56,10 +58,13 @@ class BrowserViewMixin(object):
                     continue
             full_path = op.join(source_dir, entry_name)
             rel_path = op.join(path, entry_name)
+            entry_metadata = metadata.get(rel_path, {})
             if op.isdir(full_path):
-                directories.append(Directory(entry_name, full_path, rel_path))
+                directories.append(Directory(entry_name, full_path, rel_path,
+                    entry_metadata))
             else:
-                files.append(File(entry_name, full_path, rel_path, 
+                files.append(File(entry_name, full_path, rel_path,
+                    entry_metadata, 
                     op.join(settings.FILES_URL, key, path, entry_name)))
         return directories, files
 
@@ -71,13 +76,7 @@ class BrowserView(TemplateResponseMixin, LeecherViewMixin, BrowserViewMixin,
 
     def get(self, request, key, path):
         leecher = self.get_leecher(key)
-        directories, files = self.listdir(key, path)
-        # Flatten files metadata to make it useable in the template
-        checked_paths = set()
-        if leecher.files_metadata:
-            for name, metadata in leecher.files_metadata.items():
-                if metadata.get("checked", False):
-                    checked_paths.add(name)
+        directories, files = self.listdir(key, path, leecher.files_metadata)
         # Split the path of the current page
         split_path = []
         rel = ""
@@ -93,7 +92,6 @@ class BrowserView(TemplateResponseMixin, LeecherViewMixin, BrowserViewMixin,
             "leecher": leecher,
             "directories": directories,
             "files": files,
-            "checked_paths": checked_paths,
             "settings": leecher.settings,
         })
 
@@ -101,8 +99,8 @@ class BrowserView(TemplateResponseMixin, LeecherViewMixin, BrowserViewMixin,
 class JsonBrowserView(LeecherViewMixin, BrowserViewMixin, View):
 
     def get(self, request, key, path):
-        self.get_leecher(key)
-        directories, files = self.listdir(key, path)
+        leecher = self.get_leecher(key)
+        directories, files = self.listdir(key, path, leecher.files_metadata)
         return http.HttpResponse(json.dumps({
             "directories": [d.as_dict() for d in directories], 
             "files": [f.as_dict() for f in files],
