@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-09-06 09:21-0500\n"
+"POT-Creation-Date: 2011-10-15 04:19-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,3 +29,67 @@ msgstr "Votre ami"
 #, python-format
 msgid "%(innkeeper_name)s has invited you to browse its files"
 msgstr "%(innkeeper_name)s vous invite à aller voir ses fichiers"
+
+#: templates/leechy/browse.html:5
+msgid "Index of"
+msgstr "Index de"
+
+#: templates/leechy/browse.html:11
+msgid "Hide checked items"
+msgstr "Cacher les éléments cochés"
+
+#: templates/leechy/browse.html:14 templates/leechy/browse.html.py:126
+msgid "Search..."
+msgstr "Recherche..."
+
+#: templates/leechy/browse.html:20
+msgid "Parent directory"
+msgstr ""
+
+#: templates/leechy/browse.html:26
+msgid "Name"
+msgstr "Nom"
+
+#: templates/leechy/browse.html:27
+msgid "Date"
+msgstr "Date"
+
+#: templates/leechy/browse.html:28
+msgid "Size"
+msgstr "Taille"
+
+#: templates/leechy/browse.html:37 templates/leechy/browse.html.py:51
+msgid "Google search"
+msgstr "Recherche Google"
+
+#: templates/leechy/emails/invitation.txt:1
+#, python-format
+msgid "Hi %(leecher_name)s,"
+msgstr "Salut %(leecher_name)s,"
+
+#: templates/leechy/emails/invitation.txt:1
+msgid "Hi,"
+msgstr "Salut"
+
+#: templates/leechy/emails/invitation.txt:1
+#, python-format
+msgid ""
+"\n"
+"\n"
+"%(innkeeper_name)s invited you to browse its files. They are visible at "
+"the \n"
+"following address:\n"
+"\n"
+"%(leecher_uri)s\n"
+"\n"
+"Enjoy !\n"
+msgstr ""
+"\n"
+"\n"
+"%(innkeeper_name)s vous invite à aller voir ses fichiers. Ils sont visible "
+"à\n"
+"cette adresse :\n"
+"\n"
+"%(leecher_uri)s\n"
+"\n"
+"Amusez-vous bien !\n"
