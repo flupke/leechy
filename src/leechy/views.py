@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import json
+from django.utils import simplejson as json
 import os
 import os.path as op
 import datetime
