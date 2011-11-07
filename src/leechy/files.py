@@ -1,3 +1,4 @@
+import os
 import os.path as op
 import datetime
 import re
@@ -60,4 +61,23 @@ class File(Entry):
 
 class Directory(Entry):
 
-    pass
+    @property
+    def full_path(self):
+        return self._full_path
+
+    @full_path.setter
+    def full_path(self, value):
+        self._full_path = value
+        if hasattr(self, "_size"):
+            del self._size
+
+    @property
+    def size(self):
+        if not hasattr(self, "_size"):
+            self._size = 0
+            for dirpath, dirnames, filenames in os.walk(self.full_path):
+                for f in filenames:
+                    fp = op.join(dirpath, f)
+                    if op.exists(fp):
+                        self._size += op.getsize(fp)
+        return self._size

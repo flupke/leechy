@@ -39,7 +39,7 @@
                 <td tablesorter="{{ dir.timestamp }}">
                     {{ dir.mtime|date:"SHORT_DATETIME_FORMAT" }}
                 </td>
-                <td tablesorter="0"></td>
+                <td tablesorter="{{ dir.size }}">{{ dir.size|filesizeformat }}</td>
             </tr>
             {% endfor %}
 
