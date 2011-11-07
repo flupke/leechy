@@ -61,15 +61,15 @@ class File(Entry):
 
 class Directory(Entry):
 
-    @property
-    def full_path(self):
+    def get_full_path(self):
         return self._full_path
 
-    @full_path.setter
-    def full_path(self, value):
+    def set_full_path(self, value):
         self._full_path = value
         if hasattr(self, "_size"):
             del self._size
+
+    full_path = property(get_full_path, set_full_path)
 
     @property
     def size(self):
