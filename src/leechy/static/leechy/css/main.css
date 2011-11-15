@@ -66,6 +66,7 @@ caption {background:#eee;}
 .large {font-size:1.2em;line-height:2.5em;margin-bottom:1.25em;}
 .hide {display:none;}
 .quiet {color:#666;}
+.hint {color:#666; font-style: italic;}
 .loud {color:#000;}
 .highlight {background:#ff0;}
 .added {background:#060;color:#fff;}
@@ -277,11 +278,11 @@ th {
     background-color: #f8f8f8;
 }
 
-.browser_content input {
+.browser_content input[type=checkbox] {
     margin: 0;
 }
 
-.browser_content .directory input {
+.browser_content .directory input[type=checkbox] {
     margin-left: -3px;
 }
 
@@ -392,3 +393,7 @@ th {
 .sort_up {
     background: #ddd url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAQAAAC1+jfqAAAAAXNSR0IArs4c6QAAAAJiS0dEAP+Hj8y/AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH2wkGDSsnR/SgsAAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAAA9SURBVCjPY2AYjMAbv7Qmw08gxgNWMfwHYpzAgOEfUME/II0DbAZKg+Bm7NKWUGkQtMSmYC+Sgr0MQwkAAPKIF4qzfKgfAAAAAElFTkSuQmCC") right center no-repeat;
 }
+
+input.tags { 
+    margin: 0 !important;
+}    

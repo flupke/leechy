@@ -26,9 +26,11 @@ class Entry(object):
         self.mtime = datetime.datetime.fromtimestamp(self.timestamp)
 
     def search_words(self):
-        words = self.search_split_pattern.split(self.name.encode("utf8"))
+        words = self.search_split_pattern.split(
+                op.splitext(self.name.encode("utf8"))[0])
         if "tags" in self.metadata:
-            words += self.search_split_pattern.split(self.metadata["tags"])
+            words += ["[%s]" % w for w in 
+                    self.search_split_pattern.split(self.metadata["tags"])]
         return [w for w in words if w.strip()]
 
     def google_url(self):

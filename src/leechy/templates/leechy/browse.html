@@ -26,13 +26,14 @@
                 <th>{% trans "Name" %}</th>
                 <th>{% trans "Date" %}</th>
                 <th>{% trans "Size" %}</th>
+                <th>{% trans "Tags" %}</th>
             </tr>
         </thead>
         <tbody class="browser_content">
             {% for dir in directories %}
-            <tr class="item {% if dir.metadata.checked %}checked{% endif %}" search_words="{{ dir.search_words|escape }}">
+            <tr class="item {% if dir.metadata.checked %}checked{% endif %}" search_words="{{ dir.search_words|join:" "|escape }}" path="{{ dir.rel_path }}">
                 <td class="directory">
-                    <input class="entry_checkbox" type="checkbox" path="{{ dir.rel_path }}"{% if dir.metadata.checked %} checked{% endif %} />
+                    <input class="entry_checkbox" type="checkbox"{% if dir.metadata.checked %} checked{% endif %} />
                     <a href="{{ dir.name }}/">{{ dir.name }}</a>
                     <a href="{{ dir.google_url }}" target="_blank" title="{% trans 'Google search' %}" class="search_icon"></a>
                 </td>
@@ -40,13 +41,18 @@
                     {{ dir.mtime|date:"SHORT_DATETIME_FORMAT" }}
                 </td>
                 <td tablesorter="{{ dir.size }}">{{ dir.size|filesizeformat }}</td>
+                <td tablesorter="{{ dir.metadata.tags }}">                    
+                    <div class="tags">
+                        {{ dir.metadata.tags }}
+                    </div>
+                </td>
             </tr>
             {% endfor %}
 
             {% for file in files %}
-            <tr class="item {% if file.metadata.checked %}checked{% endif %}" search_words="{{ file.search_words|escape }}">
+            <tr class="item {% if file.metadata.checked %}checked{% endif %}" search_words="{{ file.search_words|join:" "|escape }}" path="{{ file.rel_path }}">
                 <td class="file">
-                    <input class="entry_checkbox" type="checkbox" path="{{ file.rel_path }}"{% if file.metadata.checked %} checked{% endif %} />
+                    <input class="entry_checkbox" type="checkbox"{% if file.metadata.checked %} checked{% endif %} />
                     <a href="{{ file.url }}">{{ file.name }}</a>
                     <a href="{{ file.google_url }}" target="_blank" title="{% trans 'Google search' %}" class="search_icon"></a>
                 </td>
@@ -56,6 +62,11 @@
                 <td tablesorter="{{ file.size }}">
                     {{ file.size|filesizeformat }}
                 </td>
+                <td tablesorter="{{ file.metadata.tags }}">
+                    <div class="tags">
+                        {{ file.metadata.tags }}
+                    </div>
+                </td>
             </tr>
             {% endfor %}
         </tbody>
@@ -64,161 +75,8 @@
 
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
 <script type="text/javascript" src="{{ STATIC_URL }}/leechy/js/jquery.tablesorter.min.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}/leechy/js/jquery.inplace-editable.js"></script>
 <script type="text/javascript">
-    $(function()
-    {
-        // Files and directories checkboxes handler
-        $(".entry_checkbox").change(function()
-        {
-            var $this = $(this);
-            $.get("{% url leechy_update_file_metadata key=key %}", {
-                path: $this.attr("path"), 
-                attr: "checked",
-                value: $this.prop("checked")
-            });
-            $this.parent().toggleClass("checked");
-        });
-
-        // Settings persistence
-        $(".toolbar input[type=checkbox]").change(function()
-        {
-            var $this = $(this);
-            $.get("{% url leechy_update_settings key=key %}", {
-                attr: $this.attr("id"),
-                value: $this.prop("checked")
-            });
-        });
-
-        // Hide/unhide checked entries
-        function hide_checked_entries()
-        {
-            if ($("#hide_checked").prop("checked")) {
-                $(".item.checked").hide();
-            } else {
-                $(".item.checked").show();
-            }
-        }
-
-        $("#hide_checked").change(hide_checked_entries);
-
-        // Keep the toolbar on top
-        var toolbar = $(".toolbar");
-        var toolbar_initial_offset = toolbar.offset();
-        var toolbar_initial_width = toolbar.width();
-
-        function pin_toolbar()
-        {
-            if ($(document).scrollTop() > toolbar_initial_offset.top) {
-                toolbar.addClass("pinned");
-                toolbar.css("left", toolbar_initial_offset.left + "px");
-                toolbar.css("width", toolbar_initial_width + "px");
-            } else {
-                toolbar.removeClass("pinned");
-                toolbar.css("left", "");
-                toolbar.css("width", "");
-            }
-        }
-
-        $(window).scroll(pin_toolbar);
-        $(window).resize(pin_toolbar);
-
-        // Search
-        var search_input = $(".search"), search_helper = "{% trans 'Search...' %}";
-
-        function filter_items()
-        {
-            var words = [], search_text = $.trim(search_input.val());
-            if (search_text === search_helper || search_text === "") {
-                // Empty search
-                $(".item").show();
-                hide_checked_entries();
-                return;
-            }
-            $.each(search_text.split(" "), function(index, word)
-            {
-                if ($.trim(word) !== "") {
-                    words.push(word.toLowerCase());
-                }
-            });
-            $(".item").each(function()
-            {
-                var item = $(this), item_words = item.attr("search_words").toLowerCase(), match_count = 0, i;
-                for (i = 0 ; i < words.length ; i++) {
-                    if (item_words.indexOf(words[i]) !== -1) {
-                        match_count += 1;
-                    }
-                };
-                if (match_count === words.length) {
-                    item.show();
-                } else {
-                    item.hide();
-                }
-            });
-        }
-
-        search_input.focus(function()
-        {
-            if (search_input.val() == search_helper){ 
-                search_input.val("");
-                search_input.removeClass("dim");
-            }
-        }).blur(function()
-        {
-            if (search_input.val() == "") {
-                search_input.val(search_helper);
-                search_input.addClass("dim");
-            }
-        }).keyup(filter_items);
-
-        $(".search_container .reset").click(function()
-        {
-            search_input.val(search_helper);
-            search_input.addClass("dim");
-            filter_items();
-        });
-
-        // TableSorter
-        $.tablesorter.addParser({
-            id: "dir_entry",
-            is: function() { return false; },
-            format: function(text, table, cell) {
-                text = $.trim(text.toLowerCase());
-                if ($(cell).hasClass("directory")) {
-                    // Put directories in front of the ASCII sorting order
-                    return "                 " + text;
-                }
-                return text;
-            },
-            type: "text",
-        });
-
-        $.tablesorter.addParser({
-            id: "tablesorter_attr",
-            is: function() { return false; },
-            format: function(text, table, cell) {
-                return $.tablesorter.formatFloat($(cell).attr("tablesorter"));
-            },
-            type: "numeric",
-        });
-
-        $("#browser_table").tablesorter({
-            headers: {
-                0: {sorter: "dir_entry"},
-                1: {sorter: "tablesorter_attr"},
-                2: {sorter: "tablesorter_attr"}
-            },
-            sortList: [[0, 0]],
-            cssAsc: "sort_up",
-            cssDesc: "sort_down"
-        });
-
-        // Setup initial state
-        hide_checked_entries();
-        pin_toolbar();
-        if (search_input.val() != search_helper) {
-            search_input.removeClass("dim");
-        }
-        filter_items();
-    });
+    {% include "leechy/js/browse.js" %}
 </script>
 {% endblock %}
