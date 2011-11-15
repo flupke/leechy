@@ -7,6 +7,7 @@ from django.views.generic.base import View, TemplateResponseMixin
 from django import http
 from django.shortcuts import get_object_or_404
 from leechy import settings
+from leechy import cache
 from leechy.models import Leecher
 from leechy.files import Directory, File
 
@@ -52,20 +53,20 @@ class BrowserViewMixin(object):
             raise http.Http404()
         directories = []
         files = []
-        for entry_name in os.listdir(source_dir):
-            for pattern in settings.EXCLUDE_FILES:
-                if pattern.match(entry_name):
-                    continue
+        directories_data, files_data = cache.listdir(source_dir)
+        for entry_name, size, timestamp in directories_data:
             full_path = op.join(source_dir, entry_name)
             rel_path = op.join(path, entry_name)
             entry_metadata = metadata.get(rel_path, {})
-            if op.isdir(full_path):
-                directories.append(Directory(entry_name, full_path, rel_path,
-                    entry_metadata))
-            else:
-                files.append(File(entry_name, full_path, rel_path,
-                    entry_metadata, 
-                    op.join(settings.FILES_URL, key, path, entry_name)))
+            directories.append(Directory(entry_name, full_path, rel_path,
+                size, timestamp, entry_metadata))
+        for entry_name, size, timestamp in files_data:
+            full_path = op.join(source_dir, entry_name)
+            rel_path = op.join(path, entry_name)
+            entry_metadata = metadata.get(rel_path, {})
+            files.append(File(entry_name, full_path, rel_path, size,
+                timestamp, entry_metadata, 
+                op.join(settings.FILES_URL, key, path, entry_name)))
         return directories, files
 
 
