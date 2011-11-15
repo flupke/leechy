@@ -1,20 +1,30 @@
 import os
 import os.path as op
+import logging
 from django.core.cache import cache
 from leechy import settings
 
 
+logger = logging.getLogger(__name__)
+
+
 def dir_cache_key(path):
-    return "leechy-dir-cache-%s" % path
+    """
+    Get the cache key for *path*.
+    """
+    return "leechy-dir-cache-%s" % op.abspath(path)
 
 
 def listdir(path):
     """
     Retrieve the contents of directory at *path*.
     """
-    cached = cache.get(dir_cache_key(path))
-    if cached is not None:
-        return cached
+    cache_key = dir_cache_key(path)
+    data = cache.get(cache_key)
+    if data is not None:
+        logger.debug("cache hit: '%s'", cache_key)
+        return data
+    logger.debug("cache miss: '%s'", cache_key)
     return dir_cache_data(path)
 
 
@@ -48,4 +58,6 @@ def cache_directory(path):
     """
     Put the directory at *path* in the cache.
     """
-    cache.set(dir_cache_key(path), dir_cache_data(path))
+    cache_key = dir_cache_key(path)
+    logger.debug("caching '%s'", cache_key)
+    cache.set(cache_key, dir_cache_data(path))

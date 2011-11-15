@@ -6,8 +6,7 @@ import datetime
 from django.views.generic.base import View, TemplateResponseMixin
 from django import http
 from django.shortcuts import get_object_or_404
-from leechy import settings
-from leechy import cache
+from leechy import settings, cache
 from leechy.models import Leecher
 from leechy.files import Directory, File
 

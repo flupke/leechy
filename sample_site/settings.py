@@ -128,16 +128,31 @@ INSTALLED_APPS = (
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'formatters': {
+        "full": {
+            "format": "[%(asctime)s] [%(name)s] [%(levelname)s] %(message)s",
+        },
+    },
     'handlers': {
         'mail_admins': {
             'level': 'ERROR',
             'class': 'django.utils.log.AdminEmailHandler'
-        }
+        },
+        'console': {
+            'level': "DEBUG" if DEBUG else "INFO",
+            'class': 'logging.StreamHandler',
+            'formatter': 'full',
+        },
     },
     'loggers': {
         'django.request': {
             'handlers': ['mail_admins'],
             'level': 'ERROR',
+            'propagate': True,
+        },
+        'leechy': {
+            'handlers': ['console'],
+            'level': "DEBUG" if DEBUG else "INFO",
             'propagate': True,
         },
     }
@@ -150,3 +165,11 @@ if DEBUG:
     LEECHY_FILES_URL = STATIC_URL
     STATICFILES_DIRS.append(LEECHY_FILES_ROOT)
     LEECHY_GOOGLE_SEARCH_FILTERS = ["1.*", "30"]
+
+# Caching
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': '127.0.0.1:11211',
+    }
+}
