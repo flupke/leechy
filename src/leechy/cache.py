@@ -34,6 +34,8 @@ def dir_cache_data(path):
     """
     files = []
     directories = []
+    if not isinstance(path, unicode):
+        path = unicode(path, "utf8")
     for entry in os.listdir(path):
         for pattern in settings.EXCLUDE_FILES:
             if pattern.match(entry):
