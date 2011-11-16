@@ -1,4 +1,4 @@
 #!/bin/sh
-virtualenv --no-site-packages --distribute venv
+virtualenv --distribute venv
 . venv/bin/activate
-pip install gunicorn django>=1.3 gevent south
+pip install -r requirements.txt
