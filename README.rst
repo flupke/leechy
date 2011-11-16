@@ -12,60 +12,20 @@ Installation
 
 Use the ``setup.py`` script to install leechy::
 
-    python setup.py install
+    $ python setup.py install
+
+You can create a virtualenv with all the required dependencies by running the
+install script::
+
+    $ ./install.sh 
+    $ source venv/bin/activate
 
 You can try leechy with the sample Django project found in ``sample_site``::
 
-    cd sample_site/
-    python manage.py syncdb
-    python manage.py migrate
-    python manage.py runserver    
-
-If you want to run the site on your server, you can use the accompanying
-install scripts::
-
-    ./install.sh 
-    ./run-gunicorn.sh
-
-This will create a virtualenv for the site and run it with gunicorn.  You then
-have to point your frontend server configuration to the site's socket
-(``/tmp/leechy.sock`` by default). For example with nginx::
-
-    worker_processes  1;
-
-    events {
-        worker_connections  1024;
-    }
-
-    http {
-        include mime.types;
-        default_type application/octet-stream;
-        sendfile on;
-        keepalive_timeout 65;
-        gzip on;
-        
-        upstream leechy {
-            server unix:/tmp/leechy.sock fail_timeout=0;
-        }
-
-        server {
-            server_name  yoursite.com;
-
-            location / {
-                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-                proxy_set_header Host $http_host;
-                proxy_redirect off;
-                proxy_pass http://leechy;
-            }
-
-            location /static {
-                alias /path/to/leechy/static/files;
-                gzip off;
-            }
-        }
-    }
-
-Don't forget to edit the settings accordingly, see below for details.
+    $ cd sample_site/
+    $ python manage.py syncdb
+    $ python manage.py migrate
+    $ python manage.py runserver    
 
 Configuration
 -------------
