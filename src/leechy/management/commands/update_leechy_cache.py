@@ -27,4 +27,5 @@ class Command(BaseCommand):
         notifier.loop()
         
     def update_dir(self, event):
+        logger.info("'%s' changed, updating its directory in cache", event.pathname)
         cache.cache_directory(op.dirname(event.pathname))
