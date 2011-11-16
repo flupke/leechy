@@ -161,10 +161,10 @@ var methods = {
                     $this.html(settings.placeholder_text);
                 } else {
                     $this.html(nl2br(value));
-                    if (settings.callback) {
-                        if (value !== settings.placeholder_text) {
-                            settings.callback.apply(this, [value]);
-                        }
+                }
+                if (settings.callback) {
+                    if (value !== settings.placeholder_text) {
+                        settings.callback.apply(this, [value]);
                     }
                 }
                 $this.show();
