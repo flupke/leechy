@@ -12,7 +12,7 @@ def dir_cache_key(path):
     """
     Get the cache key for *path*.
     """
-    return "leechy-dir-cache-%s" % op.abspath(path).replace(" ", "_")
+    return u"leechy-dir-cache-%s" % op.abspath(path).replace(" ", "_")
 
 
 def listdir(path):

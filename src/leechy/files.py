@@ -1,8 +1,8 @@
-import os
 import os.path as op
 import datetime
 import re
 import urllib
+from collections import defaultdict
 from leechy import settings
 
 
@@ -28,9 +28,7 @@ class Entry(object):
     def search_words(self):
         words = self.search_split_pattern.split(
                 op.splitext(self.name.encode("utf8"))[0])
-        if "tags" in self.metadata:
-            words += ["[%s]" % w for w in 
-                    self.search_split_pattern.split(self.metadata["tags"])]
+        words += ["[%s]" % w for w in self.tags]                    
         return [w for w in words if w.strip()]
 
     def google_url(self):
@@ -47,7 +45,22 @@ class Entry(object):
             "name": self.name,
             "rel_path": self.rel_path,
             "timestamp": self.timestamp,
+            "tags": self.tags,
         }
+
+    @property
+    def tags(self):
+        tags = self.search_split_pattern.split(self.metadata.get("tags", ""))
+        tags = [w for w in tags if w.strip()]
+        return set(tags)
+
+    @classmethod
+    def tags_cloud(cls, entries):
+        tags = defaultdict(int)
+        for entry in entries:
+            for tag in entry.tags:
+                tags[tag] += 1
+        return dict(tags)
 
 
 class File(Entry):

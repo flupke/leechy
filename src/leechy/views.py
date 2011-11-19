@@ -3,12 +3,13 @@ from django.utils import simplejson as json
 import os
 import os.path as op
 import datetime
+import itertools
 from django.views.generic.base import View, TemplateResponseMixin
 from django import http
 from django.shortcuts import get_object_or_404
 from leechy import settings, cache
 from leechy.models import Leecher
-from leechy.files import Directory, File
+from leechy.files import Entry, Directory, File
 
 
 class HomeView(TemplateResponseMixin, View):
@@ -69,6 +70,7 @@ class BrowserViewMixin(object):
         return directories, files
 
 
+
 class BrowserView(TemplateResponseMixin, LeecherViewMixin, BrowserViewMixin,
         View):
 
@@ -93,6 +95,7 @@ class BrowserView(TemplateResponseMixin, LeecherViewMixin, BrowserViewMixin,
             "directories": directories,
             "files": files,
             "settings": leecher.settings,
+            "tags_cloud": Entry.tags_cloud(itertools.chain(directories, files)),
         })
 
 

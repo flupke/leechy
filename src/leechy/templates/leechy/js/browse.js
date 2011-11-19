@@ -166,4 +166,10 @@ $(function()
             });
         }
     });
+    $(".tags_cloud a").click(function(e) 
+    {
+        e.preventDefault();
+        $("input.search").removeClass("dim").val("[" + $(this).html() + "]");
+        filter_items();
+    });
 });

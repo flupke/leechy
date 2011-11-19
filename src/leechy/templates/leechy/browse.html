@@ -14,6 +14,12 @@
             <input type="text" class="search dim" value="{% trans 'Search...' %}" />
             <div class="reset"></div>
         </div>
+        <div class="tags_cloud">
+            Tags: 
+            {% for tag, count in tags_cloud.items %}
+            <a href="">{{ tag }}</a>
+            {% endfor %}
+        </div>
     </div>
 
     {% if path %}

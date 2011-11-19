@@ -386,6 +386,11 @@ th {
     cursor: pointer;
 }
 
+.toolbar .tags_cloud {
+    margin: 0 6px;
+    text-align: right;
+}
+
 .sort_down {
     background: #ddd url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAQAAAC1+jfqAAAAAXNSR0IArs4c6QAAAAJiS0dEAP+Hj8y/AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH2wkGDSsFkpThVAAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAAA8SURBVCjPY2AYYmAvw3843ItNgSWSAkvsZmyGSm/GZYkBwz+g9D8gjROsAipYhc+hmgw/gRgv8B58wQsAWE4XimT5AugAAAAASUVORK5CYII=") right center no-repeat;
 }
