@@ -61,5 +61,10 @@ def cache_directory(path):
     Put the directory at *path* in the cache.
     """
     cache_key = dir_cache_key(path)
-    logger.debug("caching '%s'", cache_key)
-    cache.set(cache_key, dir_cache_data(path))
+    if op.exists(path):
+        logger.debug("caching '%s'", cache_key)
+        cache.set(cache_key, dir_cache_data(path))
+    else:
+        logger.debug("removing '%s' from cache", cache_key)
+        cache.delete(cache_key)
+
