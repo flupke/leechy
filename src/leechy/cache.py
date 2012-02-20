@@ -1,3 +1,4 @@
+import sys
 import os
 import os.path as op
 import logging
@@ -12,7 +13,9 @@ def dir_cache_key(path):
     """
     Get the cache key for *path*.
     """
-    return u"leechy-dir-cache-%s" % op.abspath(path).replace(" ", "_")
+    encoding = sys.getfilesystemencoding()
+    name = op.abspath(path.decode(encoding)).replace(u" ", u"_")
+    return u"leechy-dir-cache-%s" % name
 
 
 def listdir(path):
