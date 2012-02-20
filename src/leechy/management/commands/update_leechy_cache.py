@@ -20,7 +20,8 @@ class Command(BaseCommand):
                 cache.cache_directory(op.join(dirpath, dirname))
         # Then watch for changes
         manager = pyinotify.WatchManager()
-        mask = pyinotify.IN_DELETE | pyinotify.IN_CREATE
+        mask = (pyinotify.IN_DELETE | pyinotify.IN_CREATE |
+                pyinotify.IN_MOVED_TO)
         manager.add_watch(settings.FILES_SOURCE, mask, rec=True)
         notifier = pyinotify.Notifier(manager, self.update_dir)
         logger.info("watching '%s' for changes", settings.FILES_SOURCE)
