@@ -40,10 +40,14 @@ def dir_cache_data(path):
     if not isinstance(path, unicode):
         path = unicode(path, "utf8")
     for entry in os.listdir(path):
+        entry = unicode(entry)
         for pattern in settings.EXCLUDE_FILES:
             if pattern.match(entry):
                 continue
         entry_path = op.join(path, entry)
+        if not op.exists(entry_path):
+            # File was deleted during directory listing
+            continue
         timestamp = op.getmtime(entry_path)
         if op.isdir(entry_path):
             size = 0
