@@ -13,8 +13,7 @@ def dir_cache_key(path):
     """
     Get the cache key for *path*.
     """
-    encoding = sys.getfilesystemencoding()
-    name = op.abspath(path.decode(encoding)).replace(u" ", u"_")
+    name = op.abspath(path.decode('utf8')).replace(u" ", u"_")
     return u"leechy-dir-cache-%s" % name
 
 
@@ -37,21 +36,20 @@ def dir_cache_data(path):
     """
     files = []
     directories = []
-    if not isinstance(path, unicode):
-        path = unicode(path, "utf8")
     for entry in os.listdir(path):
-        entry = unicode(entry)
+        entry = unicode(entry, 'utf8')
         for pattern in settings.EXCLUDE_FILES:
             if pattern.match(entry):
                 continue
-        entry_path = op.join(path, entry)
+        entry_path = op.join(path, entry.encode('utf8'))
         if not op.exists(entry_path):
             # File was deleted during directory listing
             continue
         timestamp = op.getmtime(entry_path)
         if op.isdir(entry_path):
             size = 0
-            for dirpath, dirnames, filenames in os.walk(entry_path):
+            for dirpath, dirnames, filenames in \
+                    os.walk(entry_path):
                 for f in filenames:
                     fp = op.join(dirpath, f)
                     if op.exists(fp):
