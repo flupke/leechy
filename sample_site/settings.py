@@ -118,6 +118,7 @@ INSTALLED_APPS = (
     'leechy',
     'sample_site',
     'south',
+    'crispy_forms',
 )
 
 # A sample logging configuration. The only tangible logging

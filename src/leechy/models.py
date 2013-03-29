@@ -4,6 +4,7 @@ from django.db import models
 from django.core.urlresolvers import reverse
 
 from leechy.fields import JSONField
+from leechy import settings
 
 
 class Leecher(models.Model):
@@ -40,3 +41,19 @@ class Leecher(models.Model):
 
 
 models.signals.pre_save.connect(Leecher.gen_key, sender=Leecher)
+
+
+class ShoutboxMessageManager(models.Manager):
+
+    def last_messages(self):
+        return list(self.order_by('-date')[:settings.SHOUTBOX_BACKLOG])[::-1]
+
+
+class ShoutboxMessage(models.Model):
+
+    objects = ShoutboxMessageManager()
+
+    date = models.DateTimeField(auto_now_add=True, db_index=True)
+    author = models.CharField(max_length=255, blank=True)
+    message = models.TextField()
+

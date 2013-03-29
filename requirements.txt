@@ -1,6 +1,7 @@
 Django==1.4.4
 South==0.7.6
 argparse==1.2.1
+django-crispy-forms==1.2.0
 gevent==0.13.8
 greenlet==0.4.0
 gunicorn==0.17.2

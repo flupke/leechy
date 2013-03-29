@@ -402,3 +402,75 @@ th {
 input.tags { 
     margin: 0 !important;
 }    
+
+body {
+    position: relative;
+}
+
+#shoutbox {
+    position: fixed;
+    background-color: white;
+    z-index: 10000;
+    right: 0;
+    top: 10%;
+    width: 162px;
+    overflow: auto;
+    padding: 7px;
+    border: 1px black solid;
+    border-right: none;
+    box-shadow: 0 0 7px rgba(0, 0, 0, 0.5);
+    -moz-box-shadow: 0 0 7px rgba(0, 0, 0, 0.5);
+    -webkit-box-shadow: 0 0 7px rgba(0, 0, 0, 0.5);
+}
+
+#shoutbox .hide_line {
+    color: #555;
+    font-size: 0.9em;
+    cursor: pointer;
+    border-bottom: 1px #555 solid;
+    margin-bottom: 1em;
+}
+
+#shoutbox .messages {
+    color: #333;
+    height: 300px;
+    overflow: auto;
+}
+
+#shoutbox .messages .author {
+    font-weight: bold;
+    font-style: italic;
+}
+
+#shoutbox textarea {
+    width: 150px;
+    height: 50px;
+}
+
+#show_shoutbox {
+    position: fixed;
+    display: none;
+    z-index: 10000;
+    right: 0;
+    top: 10%;
+    opacity: 0.5;
+    cursor: pointer;
+    border: 1px black solid;
+    box-shadow: 0 0 7px rgba(0, 0, 0, 0.5);
+    -moz-box-shadow: 0 0 7px rgba(0, 0, 0, 0.5);
+    -webkit-box-shadow: 0 0 7px rgba(0, 0, 0, 0.5);
+}
+
+#show_shoutbox:hover {
+    opacity: 1;
+}
+
+#show_shoutbox .inner {
+    width: 36px;
+    height: 72px;
+    border-top: 4px white solid;
+    border-left: 4px white solid;
+    border-bottom: 4px white solid;
+    background: url(../images/chat.png) no-repeat;
+}
+

@@ -7,11 +7,12 @@ import itertools
 from django.utils import simplejson as json
 from django.views.generic.base import View, TemplateResponseMixin
 from django import http
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 
 from leechy import settings, cache
-from leechy.models import Leecher
+from leechy.models import Leecher, ShoutboxMessage
 from leechy.files import Entry, Directory, File
+from leechy.forms import ShoutboxMessageForm
 
 
 class HomeView(TemplateResponseMixin, View):
@@ -75,7 +76,6 @@ class BrowserViewMixin(object):
         return directories, files
 
 
-
 class BrowserView(TemplateResponseMixin, LeecherViewMixin, BrowserViewMixin,
         View):
     """
@@ -84,8 +84,7 @@ class BrowserView(TemplateResponseMixin, LeecherViewMixin, BrowserViewMixin,
 
     template_name = "leechy/browse.html"
 
-    def get(self, request, key, path):
-        leecher = self.get_leecher(key)
+    def context(self, key, path, leecher, shoutbox_form):
         directories, files = self.listdir(key, path, leecher.files_metadata)
         # Split the path of the current page
         split_path = []
@@ -95,7 +94,7 @@ class BrowserView(TemplateResponseMixin, LeecherViewMixin, BrowserViewMixin,
                 continue
             split_path.insert(0, (rel, comp))
             rel += "../"
-        return self.render_to_response({
+        return {
             "key": key,
             "path": path,
             "split_path": split_path,
@@ -104,7 +103,26 @@ class BrowserView(TemplateResponseMixin, LeecherViewMixin, BrowserViewMixin,
             "files": files,
             "settings": leecher.settings,
             "tags_cloud": Entry.tags_cloud(itertools.chain(directories, files)),
-        })
+            "shoutbox_messages": ShoutboxMessage.objects.last_messages(),
+            "shoutbox_form": shoutbox_form,
+        }
+
+    def get(self, request, key, path):
+        leecher = self.get_leecher(key)
+        shoutbox_form = ShoutboxMessageForm()
+        return self.render_to_response(self.context(key, path, leecher,
+            shoutbox_form))
+
+    def post(self, request, key, path):
+        leecher = self.get_leecher(key)
+        shoutbox_form = ShoutboxMessageForm(request.POST)
+        if shoutbox_form.is_valid():
+            message = shoutbox_form.save(commit=False)
+            message.author = leecher.name
+            message.save()
+            return redirect('leechy_browse', key=key, path=path)
+        return self.render_to_response(self.context(key, path, leecher,
+            shoutbox_form))
 
 
 class JsonBrowserView(LeecherViewMixin, BrowserViewMixin, View):

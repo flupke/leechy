@@ -172,4 +172,41 @@ $(function()
         $("input.search").removeClass("dim").val("[" + $(this).html() + "]");
         filter_items();
     });
+
+    // Shoutbox
+    var shoutbox_hide_target = {
+        width: '40px',
+        height: '80px',
+        opacity: 0
+    };
+    var shoutbox_show_target = {
+        opacity: 1
+    };
+
+    $("#shoutbox .hide_line").click(function() 
+    {
+        shoutbox_show_target["height"] = $("#shoutbox").height() + 'px';
+        shoutbox_show_target["width"] = $("#shoutbox").width() + 'px';
+        $("#shoutbox").animate(shoutbox_hide_target, 400, 'swing', function()
+        {
+            $("#shoutbox").hide();
+            $("#show_shoutbox").show();
+        });
+    });
+
+    $("#show_shoutbox").click(function()
+    {
+        $("#show_shoutbox").hide();
+        $("#shoutbox").show();
+        $("#shoutbox").animate(shoutbox_show_target, 400, 'swing');
+    });
+
+    $("#shoutbox textarea").keyup(function(event)
+    {
+        if (event.keyCode === 13 && !event.shiftKey) {
+            $("#shoutbox form").submit();
+        }
+    });
+
+    $("#shoutbox .messages").scrollTop($("#shoutbox .messages").height() + 100);
 });

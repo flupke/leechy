@@ -1,5 +1,22 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n crispy_forms_tags %}
+
+{% block before_content %}
+<div id="shoutbox">
+    <div class="hide_line">{% trans "Hide chat »" %}</div>
+    <div class="messages">
+        {% for message in shoutbox_messages %}
+        <div class="message">
+            <span class="author">{% if message.author %}{{ message.author }}{% else %}{% trans "Anonymous" %}{% endif %}:</span>
+            {{ message.message|linebreaksbr }}
+        </div>
+        {% endfor %}
+    </div>
+    {% crispy shoutbox_form %}
+</div>
+
+<div id="show_shoutbox" title="{% trans "Chat" %}"><div class="inner"></div></div>
+{% endblock %}
 
 {% block content %}
 <h2>{% if split_path %}<a href="{% url leechy_browse key=key path='' %}">{% endif %}{% trans "Index of" %}{% if split_path %}</a>{% endif %} {% for rel_link, name in split_path %}/{% if not forloop.last %}<a href="{{ rel_link }}">{{ name }}</a>{% else %}{{ name }}{% endif %}{% empty %}/{% endfor %}</h2>

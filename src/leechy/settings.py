@@ -40,3 +40,5 @@ EXCLUDE_FILES = [p if hasattr(p, "match") else re.compile(p)
 GOOGLE_SEARCH_FILTERS = getattr(settings, "LEECHY_GOOGLE_SEARCH_FILTERS", [])
 GOOGLE_SEARCH_FILTERS = [p if hasattr(p, "match") else re.compile(p) 
         for p in GOOGLE_SEARCH_FILTERS]
+
+SHOUTBOX_BACKLOG = getattr(settings, "LEECHY_SHOUTBOX_BACKLOG", 100)
