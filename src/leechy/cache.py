@@ -1,4 +1,3 @@
-import sys
 import os
 import os.path as op
 import logging
@@ -14,7 +13,7 @@ def dir_cache_key(path):
     """
     Get the cache key for *path*.
     """
-    name = op.abspath(path.decode('utf8')).replace(u" ", u"_")
+    name = op.abspath(path).replace(u" ", u"_")
     return u"leechy-dir-cache-%s" % name
 
 
