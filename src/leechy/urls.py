@@ -1,4 +1,5 @@
 from django.conf.urls.defaults import patterns, url
+
 from leechy.views import (BrowserView, JsonBrowserView, HomeView,
         UpdateFilesMetadataView, UpdateSettingsView)
 

@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import simplejson as json
 from django.conf import settings
+
 from south.modelsinspector import add_introspection_rules
 
 

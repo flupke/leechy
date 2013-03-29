@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
-from django.utils import simplejson as json
 import os
 import os.path as op
 import datetime
 import itertools
+
+from django.utils import simplejson as json
 from django.views.generic.base import View, TemplateResponseMixin
 from django import http
 from django.shortcuts import get_object_or_404
+
 from leechy import settings, cache
 from leechy.models import Leecher
 from leechy.files import Entry, Directory, File
