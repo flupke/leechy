@@ -2,7 +2,7 @@
 {% load i18n %}
 
 {% block content %}
-<h2>{% trans "Index of" %} {% for rel_link, name in split_path %}/{% if not forloop.last %}<a href="{{ rel_link }}">{{ name }}</a>{% else %}{{ name }}{% endif %}{% empty %}/{% endfor %}</h2>
+<h2>{% if split_path %}<a href="{% url leechy_browse key=key path='' %}">{% endif %}{% trans "Index of" %}{% if split_path %}</a>{% endif %} {% for rel_link, name in split_path %}/{% if not forloop.last %}<a href="{{ rel_link }}">{{ name }}</a>{% else %}{{ name }}{% endif %}{% empty %}/{% endfor %}</h2>
 
 <div class="browser">
     <div class="toolbar">
