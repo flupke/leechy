@@ -13,6 +13,9 @@ from leechy.files import Entry, Directory, File
 
 
 class HomeView(TemplateResponseMixin, View):
+    """
+    Dummy home view.
+    """
 
     template_name = "leechy/home.html"
 
@@ -73,6 +76,9 @@ class BrowserViewMixin(object):
 
 class BrowserView(TemplateResponseMixin, LeecherViewMixin, BrowserViewMixin,
         View):
+    """
+    Html version of the browser.
+    """
 
     template_name = "leechy/browse.html"
 
@@ -100,6 +106,9 @@ class BrowserView(TemplateResponseMixin, LeecherViewMixin, BrowserViewMixin,
 
 
 class JsonBrowserView(LeecherViewMixin, BrowserViewMixin, View):
+    """
+    JSON version of the browser.
+    """
 
     def get(self, request, key, path):
         leecher = self.get_leecher(key)
@@ -111,6 +120,9 @@ class JsonBrowserView(LeecherViewMixin, BrowserViewMixin, View):
 
 
 class UpdateFilesMetadataView(LeecherViewMixin, View):        
+    """
+    Ajax callback view used to update a single metadata attribute of a file.
+    """
 
     def get(self, request, key):
         leecher = self.get_leecher(key)
@@ -128,7 +140,10 @@ class UpdateFilesMetadataView(LeecherViewMixin, View):
         return http.HttpResponse()
 
 
-class UpdateSettingsView(LeecherViewMixin, View):        
+class UpdateSettingsView(LeecherViewMixin, View):
+    """
+    Ajax callback view used to update a single setting of the current leecher.
+    """
 
     def get(self, request, key):
         leecher = self.get_leecher(key)
@@ -140,4 +155,4 @@ class UpdateSettingsView(LeecherViewMixin, View):
             leecher.settings = {}
         leecher.settings[attr] = value
         leecher.save()
-        return http.HttpResponse()    
+        return http.HttpResponse()
