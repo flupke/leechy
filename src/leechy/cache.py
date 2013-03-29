@@ -3,6 +3,7 @@ import os
 import os.path as op
 import logging
 from django.core.cache import cache
+from django.utils.encoding import force_unicode
 from leechy import settings
 
 
@@ -37,11 +38,10 @@ def dir_cache_data(path):
     files = []
     directories = []
     for entry in os.listdir(path):
-        entry = unicode(entry, 'utf8')
         for pattern in settings.EXCLUDE_FILES:
             if pattern.match(entry):
                 continue
-        entry_path = op.join(path, entry.encode('utf8'))
+        entry_path = op.join(path, entry)
         if not op.exists(entry_path):
             # File was deleted during directory listing
             continue
