@@ -2,7 +2,6 @@ import os
 import os.path as op
 import logging
 from django.core.cache import cache
-from django.utils.encoding import force_unicode
 from leechy import settings
 
 
@@ -24,9 +23,9 @@ def listdir(path):
     cache_key = dir_cache_key(path)
     data = cache.get(cache_key)
     if data is not None:
-        logger.debug("cache hit: '%s'", cache_key)
+        logger.debug(u"cache hit: '%s'", cache_key)
         return data
-    logger.debug("cache miss: '%s'", cache_key)
+    logger.debug(u"cache miss: '%s'", cache_key)
     return dir_cache_data(path)
 
 
@@ -66,9 +65,9 @@ def cache_directory(path):
     """
     cache_key = dir_cache_key(path)
     if op.exists(path):
-        logger.debug("caching '%s'", cache_key)
+        logger.debug(u"caching '%s'", cache_key)
         cache.set(cache_key, dir_cache_data(path))
     else:
-        logger.debug("removing '%s' from cache", cache_key)
+        logger.debug(u"removing '%s' from cache", cache_key)
         cache.delete(cache_key)
 
