@@ -1,2 +1,3 @@
 include README.rst
 include NEWS.txt
+recursive-include src/leechy *.css *.png *.jpg *.html *.js *.txt 

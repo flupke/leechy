@@ -99,7 +99,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
 )
 
-ROOT_URLCONF = 'sample_site.urls'
+ROOT_URLCONF = 'project.urls'
 
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
@@ -116,7 +116,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.admin',
     'leechy',
-    'sample_site',
+    'project',
     'south',
     'crispy_forms',
 )
@@ -160,11 +160,10 @@ LOGGING = {
 }
 
 # Leechy setup
+LEECHY_FILES_URL = STATIC_URL
 if DEBUG:
     LEECHY_FILES_SOURCE = op.join(ROOT, "var", "leechy_source")
     LEECHY_FILES_ROOT = op.join(ROOT, "var", "leechy_root")
-    LEECHY_FILES_URL = STATIC_URL
-    STATICFILES_DIRS.append(LEECHY_FILES_ROOT)
     LEECHY_GOOGLE_SEARCH_FILTERS = ["1.*", "30"]
 
 # Caching
@@ -174,3 +173,13 @@ CACHES = {
         'LOCATION': '127.0.0.1:11211',
     }
 }
+
+try:
+    from deploy_settings import *
+except ImportError:
+    pass
+
+try:
+    from local_settings import *
+except ImportError:
+    pass

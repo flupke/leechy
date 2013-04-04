@@ -5,7 +5,7 @@ django-crispy-forms==1.2.0
 gevent==0.13.8
 greenlet==0.4.0
 gunicorn==0.17.2
-leechy==0.1
 pyinotify==0.9.4
 python-memcached==1.48
 wsgiref==0.1.2
+psycopg2==2.4.6
