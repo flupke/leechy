@@ -81,9 +81,12 @@ def deploy():
             'requirements.txt'))
         run('pip install --ignore-installed %s' % 
                 op.join(settings.deploy_dir, pkg_name))
-        # Collect statics
         with cd(project_dir):
+            # Collect statics
             run('python manage.py collectstatic --noinput')
+            # Sync DB
+            run('python manage.py syncdb')
+            run('python manage.py migrate')
     # Restart supervisor processes
     fabtools.supervisor.update_config()
     fabtools.supervisor.restart_process('leechy')
