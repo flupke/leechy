@@ -2,8 +2,8 @@ import uuid
 
 from django.db import models
 from django.core.urlresolvers import reverse
+from jsonfield import JSONField
 
-from leechy.fields import JSONField
 from leechy import settings
 
 
