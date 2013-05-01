@@ -13,6 +13,7 @@ from leechy import settings, cache
 from leechy.models import Leecher, ShoutboxMessage
 from leechy.files import Entry, Directory, File
 from leechy.forms import ShoutboxMessageForm
+from leechy.utils import force_utf8
 
 
 class HomeView(TemplateResponseMixin, View):
@@ -47,6 +48,8 @@ class BrowserViewMixin(object):
     """
 
     def listdir(self, key, path, metadata):
+        key = force_utf8(key)
+        path = force_utf8(path)
         if metadata is None:
             metadata = {}
         # Create root symlink

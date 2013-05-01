@@ -5,6 +5,7 @@ import logging
 from django.core.cache import cache
 
 from leechy import settings
+from leechy.utils import force_utf8
 
 
 logger = logging.getLogger(__name__)
@@ -14,20 +15,20 @@ def dir_cache_key(path):
     """
     Get the cache key for *path*.
     """
-    name = op.abspath(path).replace(u" ", u"_")
-    return u"leechy-dir-cache-%s" % name
+    path = force_utf8(path)
+    name = op.abspath(path).replace(" ", "_")
+    return "leechy-dir-cache-%s" % name
 
 
 def listdir(path):
     """
     Retrieve the contents of directory at *path*.
     """
+    path = force_utf8(path)
     cache_key = dir_cache_key(path)
     data = cache.get(cache_key)
     if data is not None:
-        logger.debug(u"cache hit: '%s'", cache_key)
         return data
-    logger.debug(u"cache miss: '%s'", cache_key)
     return dir_cache_data(path)
 
 
@@ -35,6 +36,7 @@ def dir_cache_data(path):
     """
     Return the data to store in the cache for directory at *path*.
     """
+    path = force_utf8(path)
     files = []
     directories = []
     for entry in os.listdir(path):
@@ -65,11 +67,10 @@ def cache_directory(path):
     """
     Put the directory at *path* in the cache.
     """
+    path = force_utf8(path)
     cache_key = dir_cache_key(path)
     if op.exists(path):
-        logger.debug(u"caching '%s'", cache_key)
         cache.set(cache_key, dir_cache_data(path))
     else:
-        logger.debug(u"removing '%s' from cache", cache_key)
         cache.delete(cache_key)
 
