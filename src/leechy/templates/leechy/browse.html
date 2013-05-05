@@ -55,41 +55,20 @@
             </tr>
         </thead>
         <tbody class="browser_content">
-            {% for dir in directories %}
-            <tr class="item {% if dir.metadata.checked %}checked{% endif %}" search_words="{{ dir.search_words|join:" "|escape }}" path="{{ dir.rel_path }}">
-                <td class="directory">
-                    <input class="entry_checkbox" type="checkbox"{% if dir.metadata.checked %} checked{% endif %} />
-                    <a href="{{ dir.name }}/">{{ dir.name }}</a>
-                    <a href="{{ dir.google_url }}" target="_blank" title="{% trans 'Google search' %}" class="search_icon"></a>
+            {% for entry in entries %}
+            <tr class="item {% if entry.metadata.checked %}checked{% endif %}" search_words="{{ entry.search_words|join:" "|escape }}" path="{{ entry.rel_path }}">
+                <td class="{% if entry.is_dir %}directory{% else %}file{% endif %}">
+                    <input class="entry_checkbox" type="checkbox"{% if entry.metadata.checked %} checked{% endif %} />
+                    <a href="{% if entry.is_dir %}{{ entry.name }}/{% else %}{{ entry.url }}{% endif %}">{{ entry.name }}</a>
+                    <a href="{{ entry.google_url }}" target="_blank" title="{% trans 'Google search' %}" class="search_icon"></a>
                 </td>
-                <td tablesorter="{{ dir.timestamp }}">
-                    {{ dir.mtime|date:"SHORT_DATETIME_FORMAT" }}
+                <td tablesorter="{{ entry.timestamp }}">
+                    {{ entry.mtime|date:"SHORT_DATETIME_FORMAT" }}
                 </td>
-                <td tablesorter="{{ dir.size }}">{{ dir.size|filesizeformat }}</td>
-                <td tablesorter="{{ dir.metadata.tags }}">                    
+                <td tablesorter="{{ entry.size }}">{{ entry.size|filesizeformat }}</td>
+                <td tablesorter="{{ entry.metadata.tags }}">
                     <div class="tags">
-                        {{ dir.metadata.tags }}
-                    </div>
-                </td>
-            </tr>
-            {% endfor %}
-
-            {% for file in files %}
-            <tr class="item {% if file.metadata.checked %}checked{% endif %}" search_words="{{ file.search_words|join:" "|escape }}" path="{{ file.rel_path }}">
-                <td class="file">
-                    <input class="entry_checkbox" type="checkbox"{% if file.metadata.checked %} checked{% endif %} />
-                    <a href="{{ file.url }}">{{ file.name }}</a>
-                    <a href="{{ file.google_url }}" target="_blank" title="{% trans 'Google search' %}" class="search_icon"></a>
-                </td>
-                <td tablesorter="{{ file.timestamp }}">
-                    {{ file.mtime|date:"SHORT_DATETIME_FORMAT" }}
-                </td>
-                <td tablesorter="{{ file.size }}">
-                    {{ file.size|filesizeformat }}
-                </td>
-                <td tablesorter="{{ file.metadata.tags }}">
-                    <div class="tags">
-                        {{ file.metadata.tags }}
+                        {{ entry.metadata.tags }}
                     </div>
                 </td>
             </tr>

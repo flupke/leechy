@@ -141,7 +141,6 @@ $(function()
             1: {sorter: "tablesorter_attr"},
             2: {sorter: "tablesorter_attr"}
         },
-        sortList: [[0, 0]],
         cssAsc: "sort_up",
         cssDesc: "sort_down"
     });

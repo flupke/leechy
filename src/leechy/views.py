@@ -60,23 +60,23 @@ class BrowserViewMixin(object):
         source_dir = op.join(settings.FILES_SOURCE, path)
         if not op.isdir(source_dir):
             raise http.Http404()
-        directories = []
-        files = []
+        entries = []
         directories_data, files_data = cache.listdir(source_dir)
         for entry_name, size, timestamp in directories_data:
             full_path = op.join(source_dir, entry_name)
             rel_path = op.join(path, entry_name)
             entry_metadata = metadata.get(rel_path, {})
-            directories.append(Directory(entry_name, full_path, rel_path,
+            entries.append(Directory(entry_name, full_path, rel_path,
                 size, timestamp, entry_metadata))
         for entry_name, size, timestamp in files_data:
             full_path = op.join(source_dir, entry_name)
             rel_path = op.join(path, entry_name)
             entry_metadata = metadata.get(rel_path, {})
-            files.append(File(entry_name, full_path, rel_path, size,
+            entries.append(File(entry_name, full_path, rel_path, size,
                 timestamp, entry_metadata, 
                 op.join(settings.FILES_URL, key, path, entry_name)))
-        return directories, files
+        entries.sort(key=lambda e: e.timestamp, reverse=True)
+        return entries
 
 
 class BrowserView(TemplateResponseMixin, LeecherViewMixin, BrowserViewMixin,
@@ -88,7 +88,7 @@ class BrowserView(TemplateResponseMixin, LeecherViewMixin, BrowserViewMixin,
     template_name = "leechy/browse.html"
 
     def context(self, key, path, leecher, shoutbox_form):
-        directories, files = self.listdir(key, path, leecher.files_metadata)
+        entries = self.listdir(key, path, leecher.files_metadata)
         # Split the path of the current page
         split_path = []
         rel = ""
@@ -102,10 +102,9 @@ class BrowserView(TemplateResponseMixin, LeecherViewMixin, BrowserViewMixin,
             "path": path,
             "split_path": split_path,
             "leecher": leecher,
-            "directories": directories,
-            "files": files,
+            "entries": entries,
             "settings": leecher.settings,
-            "tags_cloud": Entry.tags_cloud(itertools.chain(directories, files)),
+            "tags_cloud": Entry.tags_cloud(entries),
             "shoutbox_messages": ShoutboxMessage.objects.last_messages(),
             "shoutbox_form": shoutbox_form,
         }
@@ -135,10 +134,9 @@ class JsonBrowserView(LeecherViewMixin, BrowserViewMixin, View):
 
     def get(self, request, key, path):
         leecher = self.get_leecher(key)
-        directories, files = self.listdir(key, path, leecher.files_metadata)
+        entries = self.listdir(key, path, leecher.files_metadata)
         return http.HttpResponse(json.dumps({
-            "directories": [d.as_dict() for d in directories], 
-            "files": [f.as_dict() for f in files],
+            "entries": [e.as_dict() for e in entries], 
         }))
 
 

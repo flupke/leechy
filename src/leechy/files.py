@@ -66,6 +66,8 @@ class Entry(object):
 
 class File(Entry):
 
+    is_dir = False
+
     def __init__(self, name, full_path, rel_path, size, timestamp, metadata, url):
         super(File, self).__init__(name, full_path, rel_path, size, timestamp, metadata)
         self.url = url
@@ -79,4 +81,4 @@ class File(Entry):
 
 class Directory(Entry):
 
-    pass
+    is_dir = True
