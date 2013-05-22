@@ -12,6 +12,7 @@ import deploy_settings as settings
 THIS_DIR = op.abspath(op.dirname(__file__))
 env.hosts = [settings.host]
 static_root = op.join(settings.deploy_dir, 'var', 'static')
+project_static_root = op.join(settings.deploy_dir, 'var', 'static', 'static')
 var_run_dir = op.join(settings.deploy_dir, 'var', 'run')
 gunicorn_bind = 'unix:%s' % op.join(var_run_dir, 'gunicorn.sock')
 venv_dir = op.join(settings.deploy_dir, 'venv')
@@ -67,7 +68,7 @@ def deploy():
                 'db_name': settings.db_name,
                 'db_user': settings.db_user,
                 'db_password': settings.db_password,
-                'static_root': static_root,
+                'static_root': project_static_root,
                 'files_dir': files_dir,
             })
     with fabtools.python.virtualenv(venv_dir):
