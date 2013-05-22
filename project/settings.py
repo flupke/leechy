@@ -1,7 +1,9 @@
 # Django settings for sample_site project.
+import sys
 import os.path as op
 
 ROOT = op.join(op.dirname(__file__), "..")
+sys.path.insert(0, op.join(ROOT, 'project', 'apps'))
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -71,7 +73,9 @@ STATIC_URL = '/static/'
 ADMIN_MEDIA_PREFIX = '/static/admin/'
 
 # Additional locations of static files
-STATICFILES_DIRS = []
+STATICFILES_DIRS = (
+    op.join(ROOT, 'project', 'static'),
+)
 
 # List of finder classes that know how to find static files in
 # various locations.
@@ -86,9 +90,21 @@ SECRET_KEY = 'nom*@449gjcdz$ih84=or6+55jie4m#1gap0!))l+6zzl4q4p6'
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
+    'django_mobile.loader.Loader',
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
 #     'django.template.loaders.eggs.Loader',
+)
+
+TEMPLATE_CONTEXT_PROCESSORS = (
+    "django.contrib.auth.context_processors.auth",
+    "django.core.context_processors.debug",
+    "django.core.context_processors.i18n",
+    "django.core.context_processors.media",
+    "django.core.context_processors.static",
+    "django.contrib.messages.context_processors.messages",
+    "django.core.context_processors.request",
+    'django_mobile.context_processors.flavour',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -97,11 +113,14 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'django_mobile.middleware.MobileDetectionMiddleware',
+    'django_mobile.middleware.SetFlavourMiddleware',
 )
 
-ROOT_URLCONF = 'project.urls'
+ROOT_URLCONF = 'leechy.urls'
 
 TEMPLATE_DIRS = (
+    op.join(ROOT, 'project', 'templates'),
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
@@ -116,9 +135,9 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.admin',
     'leechy',
-    'project',
     'south',
     'crispy_forms',
+    'django_mobile',
 )
 
 # A sample logging configuration. The only tangible logging

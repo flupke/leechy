@@ -10,3 +10,4 @@ python-memcached==1.48
 wsgiref==0.1.2
 psycopg2==2.4.6
 jsonfield==0.9.13
+django-mobile==0.2.4

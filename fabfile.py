@@ -1,6 +1,6 @@
 import os.path as op
 
-from fabric.api import local, put, run, env, cd
+from fabric.api import put, run, env, cd
 from fabric.contrib.files import upload_template
 from fabric.contrib.project import rsync_project
 import fabtools
@@ -57,12 +57,7 @@ def deploy():
     """
     Deploy leechy on a host.
     """
-    # Make a source distribution and upload it
-    local('python setup.py sdist')
-    version = local('python setup.py --version', capture=True)
-    pkg_name = 'leechy-%s.tar.gz' % version
-    put('dist/%s' % pkg_name, settings.deploy_dir)
-    # Upload requirements and project
+    # Upload requirements and rsync source tree
     put('requirements.txt', settings.deploy_dir)
     rsync_project(project_dir, 'project/',
             exclude=['*.pyc', '*.swp'])
@@ -76,11 +71,9 @@ def deploy():
                 'files_dir': files_dir,
             })
     with fabtools.python.virtualenv(venv_dir):
-        # Install leechy and requirements
+        # Install requirements
         require.python.requirements(op.join(settings.deploy_dir,
             'requirements.txt'))
-        run('pip install --ignore-installed %s' % 
-                op.join(settings.deploy_dir, pkg_name))
         with cd(project_dir):
             # Collect statics
             run('python manage.py collectstatic --noinput')
