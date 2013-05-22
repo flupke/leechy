@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+<table id="browser_table">
+    <tbody class="browser_content">
+        {% for entry in entries %}
+        {% cycle 'even' 'odd' as row_class silent %}
+        <tr class="item {{ row_class }}{% if entry.metadata.checked %} checked{% endif %}" search_words="{{ entry.search_words|join:" "|escape }}" path="{{ entry.rel_path }}">
+            <td class="{% if entry.is_dir %}directory{% else %}file{% endif %}">
+                <a href="{% if entry.is_dir %}{{ entry.name }}/{% else %}{{ entry.url }}{% endif %}">{{ entry.name }}</a>
+            </td>
+            <td>
+                <a href="{{ entry.google_url }}" target="_blank" title="{% trans 'Google search' %}" class="search_icon"></a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

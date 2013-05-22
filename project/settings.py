@@ -117,7 +117,7 @@ MIDDLEWARE_CLASSES = (
     'django_mobile.middleware.SetFlavourMiddleware',
 )
 
-ROOT_URLCONF = 'leechy.urls'
+ROOT_URLCONF = 'project.urls'
 
 TEMPLATE_DIRS = (
     op.join(ROOT, 'project', 'templates'),
